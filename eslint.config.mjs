@@ -4,6 +4,15 @@ import parser from '@typescript-eslint/parser';
 const compat = new FlatCompat();
 
 export default [
+  {
+    ignores: [
+      '.next/**',
+      'node_modules/**',
+      'dist/**',
+      'build/**',
+      'coverage/**',
+    ],
+  },
   ...compat.extends('airbnb'),
   ...compat.extends('plugin:@typescript-eslint/recommended'),
   ...compat.extends('plugin:prettier/recommended'),

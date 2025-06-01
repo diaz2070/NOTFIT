@@ -36,3 +36,6 @@ next-env.d.ts
 
 #commit lint config
 commitlint.config.js
+
+# Next
+.next/
