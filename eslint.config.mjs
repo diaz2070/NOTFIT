@@ -11,6 +11,7 @@ export default [
       'dist/**',
       'build/**',
       'coverage/**',
+      'src/lib/**',
     ],
   },
   ...compat.extends('airbnb'),
