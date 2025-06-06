@@ -1,0 +1,39 @@
+name: CI - Lint, Format, and Test
+
+on:
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  quality-check:
+    name: Code Quality and Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run Prettier Check
+        run: npm run format:check
+
+      - name: Run Unit Tests
+        run: npm run test:coverage
+
+      - name: Upload coverage report
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
