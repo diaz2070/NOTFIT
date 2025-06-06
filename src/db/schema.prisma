@@ -1,0 +1,150 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum DayOfWeek {
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  Saturday
+  Sunday
+}
+
+enum WorkoutStatus {
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum ExerciseCategory {
+  Chest
+  Back
+  Upper_Legs
+  Lower_Legs
+  Shoulders
+  Upper_Arms
+  Lower_Arms
+  Waist
+  Cardio
+  Neck
+}
+
+enum MuscleTarget {
+  Abductors
+  Abs
+  Adductors
+  Biceps
+  Calves
+  Cardiovascular_System
+  Delts
+  Forearms
+  Glutes
+  Hamstrings
+  Lats
+  Levator_Scapulae
+  Pectorals
+  Quads
+  Serratus_Anterior
+  Spine
+  Traps
+  Triceps
+  Upper_Back
+}
+
+model User {
+  id          String       @id @default(uuid())
+  name        String
+  email       String       @unique
+  password    String
+  routines    Routine[]
+  workoutLogs WorkoutLog[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Routine {
+  id          String            @id @default(uuid())
+  name        String
+  description String?
+  daysOfWeek  DayOfWeek[]
+  user        User              @relation(fields: [userId], references: [id])
+  userId      String
+  exercises   RoutineExercise[]
+  workoutLogs WorkoutLog[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+model Exercise {
+  id               String            @id @default(uuid())
+  name             String
+  category         ExerciseCategory
+  primaryMuscles   MuscleTarget[]
+  secondaryMuscles String[]
+  description      String?
+  instructions     String[]
+  imageUrl         String
+  routines         RoutineExercise[]
+  logEntries       WorkoutLogEntry[]
+  createdAt        DateTime          @default(now())
+}
+
+model RoutineExercise {
+  id           String   @id @default(uuid())
+  routine      Routine  @relation(fields: [routineId], references: [id], onDelete: Cascade)
+  routineId    String
+  exercise     Exercise @relation(fields: [exerciseId], references: [id])
+  exerciseId   String
+  sets         Int
+  reps         Int
+  targetWeight Float?
+  restTime     Int?
+  order        Int
+  note         String?
+
+  @@unique([routineId, exerciseId])
+}
+
+model WorkoutLog {
+  id          String            @id @default(uuid())
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  routine     Routine           @relation(fields: [routineId], references: [id])
+  routineId   String
+  date        DateTime          @default(now())
+  status      WorkoutStatus     @default(IN_PROGRESS)
+  startTime   DateTime?
+  pausedAt    DateTime?
+  totalPaused Int               @default(0) // (seconds or milliseconds)
+  endTime     DateTime?
+  comment     String?
+  entries     WorkoutLogEntry[]
+  totalVolume Float? // Total volume lifted in the workout
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+model WorkoutLogEntry {
+  id            String     @id @default(uuid())
+  log           WorkoutLog @relation(fields: [logId], references: [id], onDelete: Cascade)
+  logId         String
+  exercise      Exercise   @relation(fields: [exerciseId], references: [id])
+  exerciseId    String
+  setNumber     Int
+  weight        Float
+  reps          Int
+  comment       String?
+  completed     Boolean    @default(false)
+  restTime      Int? // Actual rest time taken between sets (seconds)
+  notes         String?
+  createdAt     DateTime   @default(now())
+  completedSets Json
+
+  @@unique([logId, exerciseId, setNumber])
+}

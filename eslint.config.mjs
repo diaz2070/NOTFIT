@@ -12,6 +12,7 @@ export default [
       'build/**',
       'coverage/**',
       'src/lib/**',
+      'src/db/prisma.ts',
     ],
   },
   ...compat.extends('airbnb'),
