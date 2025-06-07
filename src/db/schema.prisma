@@ -59,9 +59,9 @@ enum MuscleTarget {
 
 model User {
   id          String       @id @default(uuid())
-  name        String
+  fullName    String
+  username    String       @unique 
   email       String       @unique
-  password    String
   routines    Routine[]
   workoutLogs WorkoutLog[]
   createdAt   DateTime     @default(now())
