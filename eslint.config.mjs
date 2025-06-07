@@ -13,6 +13,7 @@ export default [
       'coverage/**',
       'src/lib/**',
       'src/db/prisma.ts',
+      'src/components/ui/**',
     ],
   },
   ...compat.extends('airbnb'),
@@ -50,7 +51,7 @@ export default [
     settings: {
       'import/resolver': {
         alias: {
-          map: [['@', '.']],
+          map: [['@', './src']],
           extensions: ['.js', '.jsx', '.ts', '.tsx'],
         },
         node: {
