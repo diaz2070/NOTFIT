@@ -61,7 +61,7 @@ export default function AuthForm() {
         <p className="text-sm">
           Already have an account?{' '}
           <Link
-            href="/signup"
+            href="/sign-up"
             className={`underline ${isPending ? 'pointer-events-none opacity-50' : ''}`}
           >
             Sign In

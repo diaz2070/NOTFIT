@@ -12,7 +12,7 @@ import DarkModeToggle from './DarkModeToggle';
 
 export default async function Header() {
   const user = await getUser();
-  const username = user?.user_metadata?.username || 'User';
+  const username = user?.user_metadata?.username ?? 'User';
 
   return (
     <header
@@ -54,7 +54,7 @@ export default async function Header() {
         {!user && (
           <Button asChild variant="secondary">
             <Link
-              href="/signup"
+              href="/sign-up"
               className="font-[family-name:var(--font-lemon)] py-5 px-6"
             >
               Sign Up
