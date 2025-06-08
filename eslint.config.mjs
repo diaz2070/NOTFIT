@@ -13,6 +13,7 @@ export default [
       'coverage/**',
       'src/lib/**',
       'src/db/prisma.ts',
+      'src/components/ui/**',
     ],
   },
   ...compat.extends('airbnb'),
@@ -31,6 +32,7 @@ export default [
     },
     rules: {
       'react/react-in-jsx-scope': 'off',
+      'react/jsx-props-no-spreading': 'off', // Turning off prop spreading rule
       'react/jsx-filename-extension': [1, { extensions: ['.ts', '.tsx'] }],
       'import/no-extraneous-dependencies': 'off',
       '@typescript-eslint/no-unused-vars': ['warn'],
@@ -50,7 +52,7 @@ export default [
     settings: {
       'import/resolver': {
         alias: {
-          map: [['@', '.']],
+          map: [['@', './src']],
           extensions: ['.js', '.jsx', '.ts', '.tsx'],
         },
         node: {
