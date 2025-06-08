@@ -2,6 +2,8 @@ import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
 import signUpAction from '@/actions/user';
+import authSchema from '@/utils/validators/authSchema';
+import { z } from 'zod';
 
 export default function useAuthForm() {
   const [isPending, startTransition] = useTransition();
@@ -9,31 +11,25 @@ export default function useAuthForm() {
 
   const buttonText = 'Sign Up';
 
-  const handleAuthSubmit = (formData: FormData) => {
+  const handleAuthSubmit = (values: z.infer<typeof authSchema>) => {
     startTransition(async () => {
-      const email = formData.get('email') as string;
-      const password = formData.get('password') as string;
-
-      let errorMessage = null;
       let title = '';
       let description = '';
 
-      const username = formData.get('username') as string;
-      const fullName = formData.get('full-name') as string;
-      if (!username || !fullName) {
-        toast.error('Missing signup data');
-        return;
-      }
-      errorMessage = (await signUpAction(email, password, username, fullName))
-        .errorMessage;
-      title = 'Account Created Successfully';
-      description = 'Welcome to the gym! Let’s get started.';
+      // Sign up the user and handle the response from the action
+      const response = await signUpAction(values);
+      // Set title and description based on success or error
+      title = 'Welcome to the gym! Let’s get started.';
+      description = 'Check your email for a verification link.';
 
-      if (!errorMessage) {
+      if (response.status === 200) {
         toast.success(title, { description, duration: 6000 });
         router.replace('/');
       } else {
-        toast.error('Error', { description: errorMessage, duration: 6000 });
+        toast.error('Something went wrong', {
+          description: response.errorMessage ?? 'Please try again later.',
+          duration: 6000,
+        });
       }
     });
   };

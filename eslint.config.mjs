@@ -32,6 +32,7 @@ export default [
     },
     rules: {
       'react/react-in-jsx-scope': 'off',
+      'react/jsx-props-no-spreading': 'off', // Turning off prop spreading rule
       'react/jsx-filename-extension': [1, { extensions: ['.ts', '.tsx'] }],
       'import/no-extraneous-dependencies': 'off',
       '@typescript-eslint/no-unused-vars': ['warn'],

@@ -2,23 +2,35 @@
 
 import { createClient } from '@/auth/server';
 import { prisma } from '@/db/prisma';
-import { handleError } from '@/lib/utils';
+import handleError from '@/utils/handle';
+import authSchema from '@/utils/validators/authSchema';
+import { z } from 'zod';
+
+type SignUpResult = {
+  status: number;
+  errorMessage: string | null;
+};
 
 const signUpAction = async (
-  email: string,
-  password: string,
-  username: string,
-  fullName: string,
-): Promise<{ errorMessage: string | null }> => {
+  values: z.infer<typeof authSchema>,
+): Promise<SignUpResult> => {
+  const validation = authSchema.safeParse(values);
+  if (!validation.success) {
+    return {
+      status: 400,
+      errorMessage: validation.error.message,
+    };
+  }
+
   try {
     const { auth } = await createClient();
     const { data, error } = await auth.signUp({
-      email,
-      password,
+      email: values.email,
+      password: values.password,
       options: {
         data: {
-          username,
-          fullName,
+          username: values.username,
+          fullName: values.name,
         },
       },
     });
@@ -31,13 +43,15 @@ const signUpAction = async (
     await prisma.user.create({
       data: {
         id: userId,
-        email,
-        username,
-        fullName,
+        email: values.email,
+        username: values.username,
+        fullName: values.name,
       },
     });
-
-    return { errorMessage: null };
+    return {
+      status: 200,
+      errorMessage: null,
+    };
   } catch (error) {
     return handleError(error);
   }

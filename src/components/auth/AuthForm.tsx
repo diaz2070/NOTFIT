@@ -1,31 +1,53 @@
 'use client';
 
 import Link from 'next/link';
+import { useForm } from 'react-hook-form';
 
 import { Loader2 } from 'lucide-react';
 import useAuthForm from '@/hooks/useAuthForm';
 
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import authSchema from '@/utils/validators/authSchema';
+
 import { Button } from '../ui/button';
 import { CardContent, CardFooter } from '../ui/card';
 import InputField from './InputFIeld';
+import { Form } from '../ui/form';
 
 export default function AuthForm() {
   const { isPending, handleAuthSubmit, buttonText } = useAuthForm();
 
+  const form = useForm<z.infer<typeof authSchema>>({
+    resolver: zodResolver(authSchema),
+    defaultValues: {
+      name: '',
+      username: '',
+      email: '',
+      password: '',
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof authSchema>) {
+    handleAuthSubmit(values);
+  }
+
   return (
-    <form action={handleAuthSubmit}>
-      <CardContent className="grid w-full items-center gap-6">
-        <>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <CardContent className="grid w-full items-center gap-6">
           <InputField
-            id="full-name"
-            label="Full Name"
-            name="full-name"
+            control={form.control}
+            id="name"
+            label="Name"
+            name="name"
             type="text"
-            placeholder="Enter your full name"
+            placeholder="Enter your name"
             required
             disabled={isPending}
           />
           <InputField
+            control={form.control}
             id="username"
             label="Username"
             name="username"
@@ -34,40 +56,42 @@ export default function AuthForm() {
             required
             disabled={isPending}
           />
-        </>
-        <InputField
-          id="email"
-          label="Email"
-          name="email"
-          type="email"
-          placeholder="Enter your email"
-          required
-          disabled={isPending}
-        />
-        <InputField
-          id="password"
-          label="Password"
-          name="password"
-          type="password"
-          placeholder="Enter your password"
-          required
-          disabled={isPending}
-        />
-      </CardContent>
-      <CardFooter className="mt-6 flex flex-col gap-6">
-        <Button className="w-full" disabled={isPending}>
-          {isPending ? <Loader2 className="animate-spin" /> : buttonText}
-        </Button>
-        <p className="text-sm">
-          Already have an account?{' '}
-          <Link
-            href="/sign-up"
-            className={`underline ${isPending ? 'pointer-events-none opacity-50' : ''}`}
-          >
-            Sign In
-          </Link>
-        </p>
-      </CardFooter>
-    </form>
+          <InputField
+            control={form.control}
+            id="email"
+            label="Email"
+            name="email"
+            type="email"
+            placeholder="Enter your email"
+            required
+            disabled={isPending}
+          />
+          <InputField
+            control={form.control}
+            id="password"
+            label="Password"
+            name="password"
+            type="password"
+            placeholder="Enter your password"
+            required
+            disabled={isPending}
+          />
+        </CardContent>
+        <CardFooter className="mt-6 flex flex-col gap-6">
+          <Button className="w-full text-white" disabled={isPending}>
+            {isPending ? <Loader2 className="animate-spin" /> : buttonText}
+          </Button>
+          <p className="text-sm">
+            Already have an account?{' '}
+            <Link
+              href="/sign-up"
+              className={`underline ${isPending ? 'pointer-events-none opacity-50' : ''}`}
+            >
+              Sign In
+            </Link>
+          </p>
+        </CardFooter>
+      </form>
+    </Form>
   );
 }

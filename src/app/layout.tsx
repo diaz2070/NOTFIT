@@ -43,7 +43,17 @@ export default function RootLayout({
               {children}
             </main>
           </div>
-          <Toaster richColors position="bottom-right" />
+          <Toaster
+            expand
+            richColors
+            position="bottom-right"
+            toastOptions={{
+              style: {
+                fontFamily: 'var(--font-inter)',
+                fontSize: '1rem',
+              },
+            }}
+          />
         </ThemeProvider>
       </body>
     </html>

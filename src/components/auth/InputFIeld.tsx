@@ -1,40 +1,57 @@
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
+'use client';
 
-type Props = Readonly<{
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Control, FieldPath, FieldValues } from 'react-hook-form';
+
+type InputFieldProps<T extends FieldValues> = Readonly<{
+  control: Control<T>;
+  name: FieldPath<T>;
   id: string;
   label: string;
-  name: string;
-  type: string;
-  required: boolean;
-  disabled: boolean;
   placeholder: string;
+  type: string;
+  disabled: boolean;
+  required: boolean;
 }>;
 
-export default function InputField({
+export default function InputField<T extends FieldValues>({
+  control,
   id,
-  label,
   name,
-  type = 'text',
-  required = false,
-  disabled = false,
+  label,
   placeholder = '',
-}: Props) {
+  type = 'text',
+  disabled = false,
+  required = false,
+}: InputFieldProps<T>) {
   return (
-    <div className="flex flex-col space-y-2">
-      <Label htmlFor={id} className="gap-1">
-        {label}
-        {required && <span className="text-red-500">*</span>}
-      </Label>
-      <Input
-        id={id}
-        type={type}
-        name={name}
-        disabled={disabled}
-        placeholder={placeholder}
-        required={required}
-      />
-    </div>
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>
+            {label} {required && <span className="text-red-500">*</span>}
+          </FormLabel>
+          <FormControl>
+            <Input
+              {...field}
+              id={id}
+              type={type}
+              placeholder={placeholder}
+              disabled={disabled}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   );
 }
-InputField.displayName = 'InputField';
