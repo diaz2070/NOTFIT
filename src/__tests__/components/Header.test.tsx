@@ -1,87 +1,70 @@
+/**
+ * @jest-environment jsdom
+ */
+import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { mocked } from 'jest-mock';
+import '@testing-library/jest-dom';
+import Header from '@/components/Header';
 import { getUser } from '@/auth/server';
-import type { User } from '@supabase/supabase-js';
-import Header from '../../components/Header';
 
-// User type mock
-const mockUser: User = {
-  id: '123',
-  aud: 'authenticated',
-  email: 'test@example.com',
-  created_at: new Date().toISOString(),
-  role: 'authenticated',
-  app_metadata: {},
-  user_metadata: {
-    username: 'andres',
-  },
-  identities: [],
-  last_sign_in_at: new Date().toISOString(),
-  phone: '',
-  confirmed_at: new Date().toISOString(),
-  email_confirmed_at: new Date().toISOString(),
-  is_anonymous: false,
-  invited_at: undefined,
-  updated_at: new Date().toISOString(),
-};
-
-jest.mock('@/auth/server');
-jest.mock('next/image', () => ({
-  __esModule: true,
-  default: ({
-    alt = 'mocked image',
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    priority,
+// Mocks
+jest.mock('next/image', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function NextImageMock({
+    alt = '',
     ...props
+  }: Readonly<
+    React.ImgHTMLAttributes<HTMLImageElement> & { priority?: boolean }
+  >) {
+    const rest = { ...props };
+    delete rest.priority;
+    return <img {...rest} alt={alt} />;
+  }
+  return NextImageMock;
+});
+jest.mock('next/link', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return function LinkMock({
+    children,
+    href,
   }: {
-    alt?: string;
-    priority?: boolean;
-  } & React.ImgHTMLAttributes<HTMLImageElement>) => {
-    return <img alt={alt} {...props} />;
-  },
-}));
-jest.mock('next/link', () => ({
-  __esModule: true,
-  default: ({ href, children }: React.PropsWithChildren<{ href: string }>) => (
-    <a href={href}>{children}</a>
-  ),
-}));
-jest.mock('../../components/DarkModeToggle', () => {
-  return function DarkModeToggle() {
-    return <div data-testid="darkmode-toggle" />;
+    children: React.ReactNode;
+    href: string;
+  }) {
+    return <a href={href}>{children}</a>;
   };
 });
-jest.mock('../../components/ui/button', () => ({
-  Button: ({ children }: React.PropsWithChildren<unknown>) => (
-    <div data-testid="button">{children}</div>
-  ),
+jest.mock('@/styles/utils', () => 'none');
+jest.mock('@/auth/server', () => ({
+  getUser: jest.fn(),
 }));
 
-const mockedGetUser = mocked(getUser);
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    refresh: jest.fn(),
+    prefetch: jest.fn(),
+  }),
+}));
 
-describe('Header', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
+describe('Header Component', () => {
+  it('renders sign-in and sign-up buttons when user is not authenticated', async () => {
+    (getUser as jest.Mock).mockResolvedValueOnce(null);
+
+    render(await Header());
+
+    expect(screen.getByText('Sign In')).toBeInTheDocument();
+    expect(screen.getByText('Sign Up')).toBeInTheDocument();
   });
-
-  it('renders username when user is logged in', async () => {
-    mockedGetUser.mockResolvedValue({
-      ...mockUser,
-      user_metadata: { username: 'andres' },
+  it('renders welcome message and logout button when user is authenticated', async () => {
+    (getUser as jest.Mock).mockResolvedValueOnce({
+      user_metadata: { username: 'testuser' },
     });
 
     render(await Header());
 
-    expect(await screen.findByText(/Welcome back andres/i)).toBeInTheDocument();
-    expect(screen.getByTestId('darkmode-toggle')).toBeInTheDocument();
-  });
-
-  it('renders sign-up button when user is not logged in', async () => {
-    mockedGetUser.mockResolvedValue(null);
-
-    render(await Header());
-
-    expect(screen.getByText(/Sign Up/i)).toBeInTheDocument();
-    expect(screen.getByTestId('darkmode-toggle')).toBeInTheDocument();
+    expect(screen.getByText(/Welcome back testuser/i)).toBeInTheDocument();
+    expect(screen.getByText('Log Out')).toBeInTheDocument();
   });
 });

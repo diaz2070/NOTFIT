@@ -14,7 +14,7 @@ describe('SignUp page', () => {
     expect(screen.getByText(/sign up/i)).toBeInTheDocument();
 
     expect(
-      screen.getByText(/enter your email below to sign in into your gym/i),
+      screen.getByText(/enter your information to create an account with us!/i),
     ).toBeInTheDocument();
 
     expect(screen.getByTestId('auth-form')).toBeInTheDocument();
