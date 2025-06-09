@@ -1,6 +1,18 @@
 import { z } from 'zod';
 
-const authSchema = z.object({
+export type SignUpFormFields = {
+  name: string;
+  username: string;
+  email: string;
+  password: string;
+};
+
+export type SignInFormFields = {
+  email: string;
+  password: string;
+};
+
+export const signUpSchema = z.object({
   name: z
     .string()
     .min(1, { message: 'Name is required' })
@@ -36,4 +48,7 @@ const authSchema = z.object({
     }),
 });
 
-export default authSchema;
+export const signInSchema = signUpSchema.pick({
+  email: true,
+  password: true,
+});

@@ -8,23 +8,30 @@ import useAuthForm from '@/hooks/useAuthForm';
 
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import authSchema from '@/utils/validators/authSchema';
+import {
+  SignInFormFields,
+  SignUpFormFields,
+} from '@/utils/validators/authSchema';
 
 import { Button } from '../ui/button';
 import { CardContent, CardFooter } from '../ui/card';
-import InputField from './InputFIeld';
+import InputField from './InputField';
 import { Form } from '../ui/form';
 
-export default function AuthForm() {
-  const { isPending, handleAuthSubmit, buttonText } = useAuthForm();
+type AuthFormProps = Readonly<{
+  type?: 'sign-in' | 'sign-up';
+}>;
 
-  const form = useForm<z.infer<typeof authSchema>>({
+export default function AuthForm({ type = 'sign-up' }: AuthFormProps) {
+  const { isSignInForm, isPending, handleAuthSubmit, buttonText, authSchema } =
+    useAuthForm(type);
+
+  const form = useForm<SignUpFormFields | SignInFormFields>({
     resolver: zodResolver(authSchema),
     defaultValues: {
-      name: '',
-      username: '',
       email: '',
       password: '',
+      ...(type === 'sign-up' && { name: '', username: '' }),
     },
   });
 
@@ -36,26 +43,30 @@ export default function AuthForm() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <CardContent className="grid w-full items-center gap-6">
-          <InputField
-            control={form.control}
-            id="name"
-            label="Name"
-            name="name"
-            type="text"
-            placeholder="Enter your name"
-            required
-            disabled={isPending}
-          />
-          <InputField
-            control={form.control}
-            id="username"
-            label="Username"
-            name="username"
-            type="text"
-            placeholder="Enter your username"
-            required
-            disabled={isPending}
-          />
+          {!isSignInForm && (
+            <>
+              <InputField
+                control={form.control}
+                id="name"
+                label="Name"
+                name="name"
+                type="text"
+                placeholder="Enter your name"
+                required
+                disabled={isPending}
+              />
+              <InputField
+                control={form.control}
+                id="username"
+                label="Username"
+                name="username"
+                type="text"
+                placeholder="Enter your username"
+                required
+                disabled={isPending}
+              />
+            </>
+          )}
           <InputField
             control={form.control}
             id="email"
@@ -82,12 +93,14 @@ export default function AuthForm() {
             {isPending ? <Loader2 className="animate-spin" /> : buttonText}
           </Button>
           <p className="text-sm">
-            Already have an account?{' '}
+            {isSignInForm
+              ? 'Don’t have an account? '
+              : 'Already have an account? '}
             <Link
-              href="/sign-up"
+              href={isSignInForm ? '/sign-up' : '/sign-in'}
               className={`underline ${isPending ? 'pointer-events-none opacity-50' : ''}`}
             >
-              Sign In
+              {isSignInForm ? 'Sign Up' : 'Sign In'}
             </Link>
           </p>
         </CardFooter>

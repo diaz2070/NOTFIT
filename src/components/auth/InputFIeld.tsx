@@ -19,6 +19,7 @@ type InputFieldProps<T extends FieldValues> = Readonly<{
   type: string;
   disabled: boolean;
   required: boolean;
+  styles?: string;
 }>;
 
 export default function InputField<T extends FieldValues>({
@@ -30,6 +31,7 @@ export default function InputField<T extends FieldValues>({
   type = 'text',
   disabled = false,
   required = false,
+  styles = '',
 }: InputFieldProps<T>) {
   return (
     <FormField
@@ -37,7 +39,7 @@ export default function InputField<T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>
+          <FormLabel htmlFor={id}>
             {label} {required && <span className="text-red-500">*</span>}
           </FormLabel>
           <FormControl>
@@ -47,6 +49,7 @@ export default function InputField<T extends FieldValues>({
               type={type}
               placeholder={placeholder}
               disabled={disabled}
+              className={`${styles}`}
             />
           </FormControl>
           <FormMessage />

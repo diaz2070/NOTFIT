@@ -3,7 +3,7 @@
 import { createClient } from '@/auth/server';
 import { prisma } from '@/db/prisma';
 import handleError from '@/utils/handle';
-import authSchema from '@/utils/validators/authSchema';
+import { signUpSchema, signInSchema } from '@/utils/validators/authSchema';
 import { z } from 'zod';
 
 type SignUpResult = {
@@ -11,14 +11,14 @@ type SignUpResult = {
   errorMessage: string | null;
 };
 
-const signUpAction = async (
-  values: z.infer<typeof authSchema>,
+export const signUpAction = async (
+  values: z.infer<typeof signUpSchema>,
 ): Promise<SignUpResult> => {
-  const validation = authSchema.safeParse(values);
+  const validation = signUpSchema.safeParse(values);
   if (!validation.success) {
     return {
       status: 400,
-      errorMessage: validation.error.message,
+      errorMessage: `Invalid input: ${validation.error.message}`,
     };
   }
 
@@ -49,7 +49,7 @@ const signUpAction = async (
       },
     });
     return {
-      status: 200,
+      status: 201,
       errorMessage: null,
     };
   } catch (error) {
@@ -57,4 +57,41 @@ const signUpAction = async (
   }
 };
 
-export default signUpAction;
+export const signInAction = async (
+  values: z.infer<typeof signInSchema>,
+): Promise<SignUpResult> => {
+  const validation = signInSchema.safeParse(values);
+  if (!validation.success) {
+    return {
+      status: 400,
+      errorMessage: `Invalid input: ${validation.error.message}`,
+    };
+  }
+
+  try {
+    const { auth } = await createClient();
+    const { error } = await auth.signInWithPassword({
+      email: values.email,
+      password: values.password,
+    });
+    if (error) throw error;
+
+    return { status: 201, errorMessage: null };
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+export const logoutAction = async (): Promise<{
+  errorMessage: string | null;
+}> => {
+  try {
+    const { auth } = await createClient();
+    const { error } = await auth.signOut();
+    if (error) throw error;
+
+    return { errorMessage: null };
+  } catch (error) {
+    return handleError(error);
+  }
+};
