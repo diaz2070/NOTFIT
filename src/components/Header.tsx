@@ -17,7 +17,7 @@ export default async function Header() {
 
   return (
     <header
-      className="relative flex h-24 w-full items-center justify-between bg-popover px-3 sm:px-8 "
+      className="relative flex h-20 w-full items-center justify-between bg-popover px-3 sm:px-8"
       style={{
         boxShadow: shadow,
       }}
@@ -29,15 +29,15 @@ export default async function Header() {
           width={105}
           height={75}
           priority
-          className="block dark:hidden"
+          className="block dark:hidden mt-1"
         />
         <Image
-          src="/logo-dark-mode.svg"
+          src="/logo-dark.svg"
           alt="NOTFIT Logo"
           width={105}
           height={75}
           priority
-          className="hidden dark:block"
+          className="hidden dark:block mt-1"
         />
       </Link>
 
