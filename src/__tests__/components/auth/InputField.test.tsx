@@ -7,7 +7,6 @@ import { useForm, FormProvider } from 'react-hook-form';
 import '@testing-library/jest-dom';
 import InputField from '@/components/auth/InputField';
 
-// Mock subcomponents if they have internal logic you don’t want to test here
 jest.mock('@/components/ui/form', () => ({
   FormField: ({
     name,
@@ -80,7 +79,7 @@ describe('InputField component', () => {
 
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Enter your email')).toBeInTheDocument();
-    expect(screen.getByText('*')).toBeInTheDocument(); // required asterisk
+    expect(screen.getByText('*')).toBeInTheDocument();
   });
 
   it('disables the input when disabled is true', () => {

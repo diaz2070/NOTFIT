@@ -43,7 +43,6 @@ describe('useAuthForm', () => {
     password: 'StrongPass123!',
   };
 
-  // ✅ Already covered
   it('handles successful signup', async () => {
     (signUpAction as jest.Mock).mockResolvedValue({
       status: 200,
@@ -67,7 +66,6 @@ describe('useAuthForm', () => {
     expect(mockReplace).toHaveBeenCalledWith('/');
   });
 
-  // ✅ Already covered
   it('handles failed signup', async () => {
     (signUpAction as jest.Mock).mockResolvedValue({
       status: 400,
@@ -91,7 +89,6 @@ describe('useAuthForm', () => {
     expect(mockReplace).not.toHaveBeenCalled();
   });
 
-  // ✅ New test: successful sign-in
   it('handles successful sign-in', async () => {
     (signInAction as jest.Mock).mockResolvedValue({
       status: 200,
@@ -115,11 +112,10 @@ describe('useAuthForm', () => {
     expect(mockReplace).toHaveBeenCalledWith('/');
   });
 
-  // ✅ New test: failed sign-in with fallback message
   it('handles failed sign-in with fallback error message', async () => {
     (signInAction as jest.Mock).mockResolvedValue({
       status: 401,
-      errorMessage: null, // triggers fallback string
+      errorMessage: null,
     });
 
     const { result } = renderHook(() => useAuthForm('sign-in'));
