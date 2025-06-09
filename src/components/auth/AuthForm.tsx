@@ -44,28 +44,16 @@ export default function AuthForm({ type = 'sign-up' }: AuthFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <CardContent className="grid w-full items-center gap-6">
           {!isSignInForm && (
-            <>
-              <InputField
-                control={form.control}
-                id="name"
-                label="Name"
-                name="name"
-                type="text"
-                placeholder="Enter your name"
-                required
-                disabled={isPending}
-              />
-              <InputField
-                control={form.control}
-                id="username"
-                label="Username"
-                name="username"
-                type="text"
-                placeholder="Enter your username"
-                required
-                disabled={isPending}
-              />
-            </>
+            <InputField
+              control={form.control}
+              id="name"
+              label="Name"
+              name="name"
+              type="text"
+              placeholder="Enter your name"
+              required
+              disabled={isPending}
+            />
           )}
           <InputField
             control={form.control}
@@ -87,6 +75,18 @@ export default function AuthForm({ type = 'sign-up' }: AuthFormProps) {
             required
             disabled={isPending}
           />
+          {!isSignInForm && (
+            <InputField
+              control={form.control}
+              id="username"
+              label="Username"
+              name="username"
+              type="text"
+              placeholder="Enter your username"
+              required
+              disabled={isPending}
+            />
+          )}
         </CardContent>
         <CardFooter className="mt-6 flex flex-col gap-6">
           <Button className="w-full text-white" disabled={isPending}>
