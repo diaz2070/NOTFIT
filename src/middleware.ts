@@ -45,7 +45,11 @@ export async function updateSession(request: NextRequest) {
     request.nextUrl.pathname === '/sign-in' ||
     request.nextUrl.pathname === '/sign-up';
 
-  const isPublicRoute = isAuthRoute || request.nextUrl.pathname === '/';
+  const isEmailConfirmRoute =
+    request.nextUrl.pathname.startsWith('/auth/confirm');
+
+  const isPublicRoute =
+    isAuthRoute || request.nextUrl.pathname === '/' || isEmailConfirmRoute;
 
   const {
     data: { user },
