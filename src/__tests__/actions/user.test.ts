@@ -1,16 +1,20 @@
 /**
  * @jest-environment node
  */
-import signUpAction from '@/actions/user';
-import { createClient } from '@/auth/server';
-import { prisma } from '@/db/prisma';
-import handleError from '@/utils/handle';
-import type { User } from '@supabase/supabase-js';
-import type { z } from 'zod';
-import authSchema from '@/utils/validators/authSchema';
 import { SupabaseClient } from '@supabase/supabase-js';
+import type { User } from '@supabase/supabase-js';
 
-type AuthSchemaType = z.infer<typeof authSchema>;
+import { prisma } from '@/db/prisma';
+
+import type { z } from 'zod';
+
+import { createClient } from '@/auth/server';
+import { signUpAction, signInAction, logoutAction } from '@/actions/user';
+import { signUpSchema, signInSchema } from '@/utils/validators/authSchema';
+import handleError from '@/utils/handle';
+
+type SignUpSchemaType = z.infer<typeof signUpSchema>;
+type SignInSchemaType = z.infer<typeof signInSchema>;
 
 // Mock dependencies
 jest.mock('@/auth/server', () => ({
@@ -37,7 +41,7 @@ const mockedPrisma = prisma as unknown as {
 };
 
 describe('signUpAction', () => {
-  const validValues: AuthSchemaType = {
+  const validValues: SignUpSchemaType = {
     name: 'John Doe',
     username: 'johndoe',
     email: 'john@example.com',
@@ -51,7 +55,7 @@ describe('signUpAction', () => {
 
   it('returns 400 for invalid input', async () => {
     const invalid = { ...validValues, email: 'invalid' };
-    const res = await signUpAction(invalid as AuthSchemaType);
+    const res = await signUpAction(invalid as SignUpSchemaType);
     expect(res.status).toBe(400);
     expect(res.errorMessage).toContain('email');
   });
@@ -163,7 +167,97 @@ describe('signUpAction', () => {
     });
 
     const res = await signUpAction(validValues);
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(201);
     expect(res.errorMessage).toBeNull();
+  });
+});
+
+describe('signInAction', () => {
+  const validCredentials: SignInSchemaType = {
+    email: 'john@example.com',
+    password: 'Password123!',
+  };
+
+  it('returns 400 for invalid input', async () => {
+    const invalid = { ...validCredentials, email: 'not-an-email' };
+    const res = await signInAction(invalid as SignInSchemaType);
+    expect(res.status).toBe(400);
+    expect(res.errorMessage).toContain('email');
+  });
+
+  it('returns 500 if Supabase signInWithPassword throws error', async () => {
+    const mockAuth = {
+      signInWithPassword: jest.fn().mockResolvedValue({
+        error: new Error('Invalid credentials'),
+      }),
+    };
+
+    mockedCreateClient.mockResolvedValue({
+      auth: mockAuth,
+    } as unknown as SupabaseClient);
+
+    mockedHandleError.mockReturnValue({
+      status: 500,
+      errorMessage: 'Invalid credentials',
+    });
+
+    const res = await signInAction(validCredentials);
+    expect(mockAuth.signInWithPassword).toHaveBeenCalledWith(validCredentials);
+    expect(res.status).toBe(500);
+    expect(res.errorMessage).toBe('Invalid credentials');
+  });
+
+  it('returns 201 on successful login', async () => {
+    const mockAuth = {
+      signInWithPassword: jest.fn().mockResolvedValue({
+        error: null,
+      }),
+    };
+
+    mockedCreateClient.mockResolvedValue({
+      auth: mockAuth,
+    } as unknown as SupabaseClient);
+
+    const res = await signInAction(validCredentials);
+    expect(mockAuth.signInWithPassword).toHaveBeenCalledWith(validCredentials);
+    expect(res.status).toBe(201);
+    expect(res.errorMessage).toBeNull();
+  });
+});
+
+describe('logoutAction', () => {
+  it('returns null errorMessage on success', async () => {
+    const mockAuth = {
+      signOut: jest.fn().mockResolvedValue({ error: null }),
+    };
+
+    mockedCreateClient.mockResolvedValue({
+      auth: mockAuth,
+    } as unknown as SupabaseClient);
+
+    const res = await logoutAction();
+    expect(mockAuth.signOut).toHaveBeenCalled();
+    expect(res.errorMessage).toBeNull();
+  });
+
+  it('returns errorMessage on failure', async () => {
+    const mockAuth = {
+      signOut: jest
+        .fn()
+        .mockResolvedValue({ error: new Error('Logout failed') }),
+    };
+
+    mockedCreateClient.mockResolvedValue({
+      auth: mockAuth,
+    } as unknown as SupabaseClient);
+
+    mockedHandleError.mockReturnValue({
+      status: 500,
+      errorMessage: 'Logout failed',
+    });
+
+    const res = await logoutAction();
+    expect(mockAuth.signOut).toHaveBeenCalled();
+    expect(res.errorMessage).toBe('Logout failed');
   });
 });

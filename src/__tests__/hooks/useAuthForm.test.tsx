@@ -5,7 +5,7 @@ import { renderHook, act } from '@testing-library/react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import useAuthForm from '@/hooks/useAuthForm';
-import signUpAction from '@/actions/user';
+import { signUpAction, signInAction } from '@/actions/user';
 
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
@@ -18,7 +18,10 @@ jest.mock('sonner', () => ({
   },
 }));
 
-jest.mock('@/actions/user', () => jest.fn());
+jest.mock('@/actions/user', () => ({
+  signUpAction: jest.fn(),
+  signInAction: jest.fn(),
+}));
 
 describe('useAuthForm', () => {
   const mockReplace = jest.fn();
@@ -28,9 +31,14 @@ describe('useAuthForm', () => {
     (useRouter as jest.Mock).mockReturnValue({ replace: mockReplace });
   });
 
-  const validInput = {
+  const signUpInput = {
     name: 'Test User',
     username: 'testuser',
+    email: 'test@example.com',
+    password: 'StrongPass123!',
+  };
+
+  const signInInput = {
     email: 'test@example.com',
     password: 'StrongPass123!',
   };
@@ -41,15 +49,15 @@ describe('useAuthForm', () => {
       errorMessage: null,
     });
 
-    const { result } = renderHook(() => useAuthForm());
+    const { result } = renderHook(() => useAuthForm('sign-up'));
 
     await act(async () => {
-      result.current.handleAuthSubmit(validInput);
+      result.current.handleAuthSubmit(signUpInput);
     });
 
-    expect(signUpAction).toHaveBeenCalledWith(validInput);
+    expect(signUpAction).toHaveBeenCalledWith(signUpInput);
     expect(toast.success).toHaveBeenCalledWith(
-      'Welcome to the gym! Let’s get started.',
+      'Welcome to your gym hub!',
       expect.objectContaining({
         description: 'Check your email for a verification link.',
         duration: 6000,
@@ -64,17 +72,63 @@ describe('useAuthForm', () => {
       errorMessage: 'Validation failed',
     });
 
-    const { result } = renderHook(() => useAuthForm());
+    const { result } = renderHook(() => useAuthForm('sign-up'));
 
     await act(async () => {
-      result.current.handleAuthSubmit(validInput);
+      result.current.handleAuthSubmit(signUpInput);
     });
 
-    expect(signUpAction).toHaveBeenCalledWith(validInput);
+    expect(signUpAction).toHaveBeenCalledWith(signUpInput);
     expect(toast.error).toHaveBeenCalledWith(
       'Something went wrong',
       expect.objectContaining({
         description: 'Validation failed',
+        duration: 6000,
+      }),
+    );
+    expect(mockReplace).not.toHaveBeenCalled();
+  });
+
+  it('handles successful sign-in', async () => {
+    (signInAction as jest.Mock).mockResolvedValue({
+      status: 200,
+      errorMessage: null,
+    });
+
+    const { result } = renderHook(() => useAuthForm('sign-in'));
+
+    await act(async () => {
+      result.current.handleAuthSubmit(signInInput);
+    });
+
+    expect(signInAction).toHaveBeenCalledWith(signInInput);
+    expect(toast.success).toHaveBeenCalledWith(
+      'Welcome back!',
+      expect.objectContaining({
+        description: 'Get those gains back up.',
+        duration: 6000,
+      }),
+    );
+    expect(mockReplace).toHaveBeenCalledWith('/');
+  });
+
+  it('handles failed sign-in with fallback error message', async () => {
+    (signInAction as jest.Mock).mockResolvedValue({
+      status: 401,
+      errorMessage: null,
+    });
+
+    const { result } = renderHook(() => useAuthForm('sign-in'));
+
+    await act(async () => {
+      result.current.handleAuthSubmit(signInInput);
+    });
+
+    expect(signInAction).toHaveBeenCalledWith(signInInput);
+    expect(toast.error).toHaveBeenCalledWith(
+      'Something went wrong',
+      expect.objectContaining({
+        description: 'Please try again later.',
         duration: 6000,
       }),
     );

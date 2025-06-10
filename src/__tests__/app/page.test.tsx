@@ -28,7 +28,7 @@ describe('Home', () => {
 
     expect(images[0]).toHaveAttribute(
       'src',
-      expect.stringContaining('logo-dark-mode.svg'),
+      expect.stringContaining('logo-dark.svg'),
     );
     expect(images[1]).toHaveAttribute(
       'src',

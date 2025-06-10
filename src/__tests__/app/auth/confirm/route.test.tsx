@@ -33,7 +33,6 @@ describe('GET email confirmation handler', () => {
         delete: jest.fn(),
       },
       nextUrl: url,
-      // Add any other properties if needed by your GET implementation
     } as unknown as import('next/server').NextRequest;
   };
 

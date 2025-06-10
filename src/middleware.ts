@@ -1,4 +1,4 @@
-// import { createServerClient } from '@supabase/ssr';
+import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
 // This middleware runs on every request to check if the user is authenticated
@@ -14,55 +14,54 @@ export const config = {
 // and setting the appropriate cookies
 // It also handles redirection for unauthenticated users
 export async function updateSession(request: NextRequest) {
-  // Change to let later on dev
-  const supabaseResponse = NextResponse.next({
+  let supabaseResponse = NextResponse.next({
     request,
   });
 
-  // const supabase = createServerClient(
-  //   process.env.SUPABASE_URL!,
-  //   process.env.SUPABASE_ANON_KEY!,
-  //   {
-  //     cookies: {
-  //       getAll() {
-  //         return request.cookies.getAll();
-  //       },
-  //       setAll(cookiesToSet) {
-  //         cookiesToSet.forEach(({ name, value }) =>
-  //           request.cookies.set(name, value),
-  //         );
-  //         supabaseResponse = NextResponse.next({
-  //           request,
-  //         });
-  //         cookiesToSet.forEach(({ name, value, options }) =>
-  //           supabaseResponse.cookies.set(name, value, options),
-  //         );
-  //       },
-  //     },
-  //   },
-  // // );
+  const supabase = createServerClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) =>
+            request.cookies.set(name, value),
+          );
+          supabaseResponse = NextResponse.next({
+            request,
+          });
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options),
+          );
+        },
+      },
+    },
+  );
 
-  // Do not run code between createServerClient and
-  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
-  // issues with users being randomly logged out.
+  const isAuthRoute =
+    request.nextUrl.pathname === '/sign-in' ||
+    request.nextUrl.pathname === '/sign-up';
 
-  // IMPORTANT: DO NOT REMOVE auth.getUser()
+  const isPublicRoute = isAuthRoute || request.nextUrl.pathname === '/';
 
-  // const {
-  //   data: { user },
-  // // } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  // ! GET RID OF THIS LATER
-  // if (
-  //   !user &&
-  //   !request.nextUrl.pathname.startsWith('/login') &&
-  //   !request.nextUrl.pathname.startsWith('/auth')
-  // ) {
-  //   // no user, potentially respond by redirecting the user to the login page
-  //   const url = request.nextUrl.clone();
-  //   url.pathname = '/login';
-  //   return NextResponse.redirect(url);
-  // }
+  if (isAuthRoute && user) {
+    return NextResponse.redirect(
+      new URL('/', process.env.NEXT_PUBLIC_BASE_URL),
+    );
+  }
+
+  if (!isPublicRoute && !user) {
+    return NextResponse.redirect(
+      new URL('/sign-in', process.env.NEXT_PUBLIC_BASE_URL),
+    );
+  }
 
   return supabaseResponse;
 }

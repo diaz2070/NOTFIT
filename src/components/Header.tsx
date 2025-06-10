@@ -9,6 +9,7 @@ import shadow from '@/styles/utils';
 
 import { Button } from './ui/button';
 import DarkModeToggle from './DarkModeToggle';
+import LogoutButton from './LogoutButton';
 
 export default async function Header() {
   const user = await getUser();
@@ -16,30 +17,27 @@ export default async function Header() {
 
   return (
     <header
-      className="relative flex h-24 w-full items-center justify-between bg-popover px-3 sm:px-8 "
+      className="relative flex h-20 w-full items-center justify-between bg-popover px-3 sm:px-8"
       style={{
         boxShadow: shadow,
       }}
     >
-      <Link
-        href="/"
-        // className="flex items-center gap-2 text-lg font-bold text-gray-900 dark:text-gray-100"
-      >
+      <Link href="/">
         <Image
           src="/logo-light.svg"
           alt="NOTFIT Logo"
           width={105}
           height={75}
           priority
-          className="block dark:hidden"
+          className="block dark:hidden mt-1"
         />
         <Image
-          src="/logo-dark-mode.svg"
+          src="/logo-dark.svg"
           alt="NOTFIT Logo"
           width={105}
           height={75}
           priority
-          className="hidden dark:block"
+          className="hidden dark:block mt-1"
         />
       </Link>
 
@@ -51,15 +49,26 @@ export default async function Header() {
             </p>
           </div>
         )}
+        {user && <LogoutButton />}
         {!user && (
-          <Button asChild variant="secondary">
-            <Link
-              href="/sign-up"
-              className="font-[family-name:var(--font-lemon)] py-5 px-6"
-            >
-              Sign Up
-            </Link>
-          </Button>
+          <>
+            <Button asChild>
+              <Link
+                href="/sign-in"
+                className="font-[family-name:var(--font-lemon)]  py-5 px-6 text-white"
+              >
+                Sign In
+              </Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link
+                href="/sign-up"
+                className="font-[family-name:var(--font-lemon)] py-5 px-6"
+              >
+                Sign Up
+              </Link>
+            </Button>
+          </>
         )}
         <DarkModeToggle />
       </div>
