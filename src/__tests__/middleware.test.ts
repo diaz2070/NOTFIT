@@ -120,16 +120,9 @@ describe('middleware', () => {
         },
       };
     });
-
     const response = await middleware(request);
-
-    // ✅ Verifica que se llamó getAll (lo que cubre cookies.getAll() → request.cookies.getAll())
     expect(mockGetAll).toHaveBeenCalled();
-
-    // ✅ Verifica que se llamara cookies.set del request original
     expect(mockSet).toHaveBeenCalledWith('sb-access-token', 'abc123');
-
-    // ✅ Verifica que se haya devuelto una respuesta con las cookies seteadas
     expect(NextResponse.next).toHaveBeenCalledWith({ request });
     expect(response.cookies.set).toHaveBeenCalledWith(
       'sb-access-token',

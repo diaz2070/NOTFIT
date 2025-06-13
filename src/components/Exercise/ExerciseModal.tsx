@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
 } from '@/components/ui/dialog';
 import useFilteredExercises from '@/hooks/useFilteredExercises';
 import { Exercise } from '@prisma/client';
@@ -69,6 +70,9 @@ export default function ExerciseModal({
         <ScrollArea>
           <DialogHeader className="p-6 pb-3 border-b-3 border-primary">
             <DialogTitle className="text-2xl">Explore exercises</DialogTitle>
+            <DialogDescription className="mt-1.5">
+              Browse and select exercises for your workout routine
+            </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col lg:flex-row h-full max-h-[70vh]">
             <ExerciseFiltersPanel
@@ -112,7 +116,6 @@ export default function ExerciseModal({
 
             {!isPending && exercises && exercises.length > 0 && (
               <div className="flex-1 flex flex-col lg:flex-row">
-                {/* // <div className="flex-1 grid grid-cols-1 lg:grid-cols-2"> */}
                 <div className="lg:w-1/2 p-2 sm:p-4">
                   <ExerciseList
                     exercises={exercises}
