@@ -20,7 +20,7 @@ jest.mock('next/image', () => {
     },
   };
 });
-jest.mock('@/components/exercise/Pagination', () => ({
+jest.mock('@/components/Exercise/Pagination', () => ({
   __esModule: true,
   default: ({ page, totalPages }: { page: number; totalPages: number }) => (
     <div>
