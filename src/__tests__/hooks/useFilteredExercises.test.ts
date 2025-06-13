@@ -5,7 +5,7 @@ import { Exercise } from '@prisma/client';
 import getExercisesAction from '@/actions/exercises';
 import { toast } from 'sonner';
 
-jest.mock('@/actions/Exercises', () => ({
+jest.mock('@/actions/exercises', () => ({
   __esModule: true,
   default: jest.fn(),
 }));
