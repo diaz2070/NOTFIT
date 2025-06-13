@@ -25,14 +25,12 @@ interface ExerciseBrowserModalProps {
   onExerciseSelect?: (exercise: Exercise) => void;
 }
 
-export default function ExerciseBrowserModal({
+export default function ExerciseModal({
   children,
   onExerciseSelect,
 }: Readonly<ExerciseBrowserModalProps>) {
   const [open, setOpen] = useState(false);
-  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(
-    null,
-  );
+  const [selectedExercises, setSelectedExercises] = useState<Exercise[]>([]);
   const categoryOptions = ExerciseCategoryEnum.options;
   const muscleOptions = MuscleTargetEnum.options;
   const {
@@ -46,10 +44,20 @@ export default function ExerciseBrowserModal({
     prevPage,
   } = useFilteredExercises(open);
 
+  const toggleExerciseSelection = (exercise: Exercise) => {
+    setSelectedExercises((prev) => {
+      const alreadySelected = prev.find((e) => e.id === exercise.id);
+      if (alreadySelected) {
+        return prev.filter((e) => e.id !== exercise.id);
+      }
+      return [...prev, exercise];
+    });
+  };
+
   const handleOpenChange = (isOpen: boolean) => {
     if (!isOpen) {
       clearFilters();
-      setSelectedExercise(null);
+      setSelectedExercises([]);
     }
     setOpen(isOpen);
   };
@@ -108,8 +116,8 @@ export default function ExerciseBrowserModal({
                 <div className="lg:w-1/2 p-2 sm:p-4">
                   <ExerciseList
                     exercises={exercises}
-                    selectedExercise={selectedExercise}
-                    onSelect={setSelectedExercise}
+                    selectedExercises={selectedExercises}
+                    onToggleSelect={toggleExerciseSelection}
                     page={filters.page}
                     totalPages={totalPages}
                     nextPage={nextPage}
@@ -119,13 +127,19 @@ export default function ExerciseBrowserModal({
 
                 <div className="lg:w-1/2 p-4 border-t-2 sm:border-l border-border">
                   <ExerciseDetail
-                    exercise={selectedExercise}
+                    exercise={
+                      selectedExercises[selectedExercises.length - 1] ?? null
+                    }
                     onSelectConfirm={() => {
-                      if (selectedExercise) {
-                        onExerciseSelect?.(selectedExercise);
+                      if (selectedExercises.length) {
+                        selectedExercises.forEach((exercise) =>
+                          onExerciseSelect?.(exercise),
+                        );
                         setOpen(false);
+                        setSelectedExercises([]);
                       }
                     }}
+                    selectedExercisesCount={selectedExercises.length}
                   />
                 </div>
               </div>

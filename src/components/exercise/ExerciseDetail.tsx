@@ -10,11 +10,13 @@ import ExerciseBadge from './ExerciseBadge';
 interface ExerciseDetailProps {
   exercise: Exercise | null;
   onSelectConfirm: () => void;
+  selectedExercisesCount: number;
 }
 
 export default function ExerciseDetail({
   exercise,
   onSelectConfirm,
+  selectedExercisesCount = 1,
 }: Readonly<ExerciseDetailProps>) {
   if (!exercise) {
     return (
@@ -99,7 +101,7 @@ export default function ExerciseDetail({
 
       <div className="pt-4">
         <Button onClick={onSelectConfirm} className="w-full">
-          Select exercise
+          Select {selectedExercisesCount} exercise(s)
         </Button>
       </div>
     </ScrollArea>

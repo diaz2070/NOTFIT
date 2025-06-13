@@ -10,8 +10,8 @@ import PaginationControls from './Pagination';
 
 interface ExerciseListProps {
   exercises: Exercise[];
-  selectedExercise: Exercise | null;
-  onSelect: (exercise: Exercise) => void;
+  selectedExercises: Exercise[];
+  onToggleSelect: (exercise: Exercise) => void;
   page: number;
   totalPages: number;
   nextPage: () => void;
@@ -20,8 +20,8 @@ interface ExerciseListProps {
 
 export default function ExerciseList({
   exercises,
-  selectedExercise,
-  onSelect,
+  selectedExercises,
+  onToggleSelect,
   page,
   totalPages,
   nextPage,
@@ -30,44 +30,49 @@ export default function ExerciseList({
   return (
     <ScrollArea className="h-full">
       <div className="space-y-3 p-2">
-        {exercises.map((exercise) => (
-          <Card
-            key={exercise.id}
-            className={`cursor-pointer transition-all hover:shadow-md ${
-              selectedExercise?.id === exercise.id ? 'ring-3 ring-primary' : ''
-            } `}
-            onClick={() => onSelect(exercise)}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-start space-x-3">
-                <Image
-                  src={exercise.imageUrl || '/placeholder.png'}
-                  alt={exercise.name}
-                  width={60}
-                  height={60}
-                  className="rounded-md object-cover"
-                />
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-semibold text-sm line-clamp-2">
-                    {exercise.name.charAt(0).toUpperCase() +
-                      exercise.name.slice(1)}
-                  </h4>
-                  <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
-                    {exercise.description}
-                  </p>
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    <Badge
-                      variant="outline"
-                      className={`text-xs ${getCategoryColor(exercise.category)}`}
-                    >
-                      {formatLabel(exercise.category)}
-                    </Badge>
+        {exercises.map((exercise) => {
+          const isSelected = selectedExercises.some(
+            (e) => e.id === exercise.id,
+          );
+          return (
+            <Card
+              key={exercise.id}
+              className={`cursor-pointer transition-all hover:shadow-md ${
+                isSelected ? 'ring-3 ring-primary' : ''
+              } `}
+              onClick={() => onToggleSelect(exercise)}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-start space-x-3">
+                  <Image
+                    src={exercise.imageUrl || '/placeholder.png'}
+                    alt={exercise.name}
+                    width={60}
+                    height={60}
+                    className="rounded-md object-cover"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-semibold text-sm line-clamp-2">
+                      {exercise.name.charAt(0).toUpperCase() +
+                        exercise.name.slice(1)}
+                    </h4>
+                    <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
+                      {exercise.description}
+                    </p>
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      <Badge
+                        variant="outline"
+                        className={`text-xs ${getCategoryColor(exercise.category)}`}
+                      >
+                        {formatLabel(exercise.category)}
+                      </Badge>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
       <div className="flex md:hidden justify-center p-3 py-4">
         <PaginationControls
