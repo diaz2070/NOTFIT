@@ -4,7 +4,7 @@
 import React from 'react';
 import { render, screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import LogoutButton from '@/components/LogoutButton';
+import LogoutButton from '@/components/Navigation/LogoutButton';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { logoutAction } from '@/actions/user';
