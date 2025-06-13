@@ -6,14 +6,11 @@ import Image from 'next/image';
 import { getUser } from '@/auth/server';
 
 import shadow from '@/styles/utils';
-
-import { Button } from './ui/button';
-import DarkModeToggle from './DarkModeToggle';
-import LogoutButton from './LogoutButton';
+import MobileNavigation from './Navigation/MobileNavigation';
+import DesktopNavigation from './Navigation/DesktopNavigation';
 
 export default async function Header() {
   const user = await getUser();
-  const username = user?.user_metadata?.username ?? 'User';
 
   return (
     <header
@@ -41,37 +38,10 @@ export default async function Header() {
         />
       </Link>
 
-      <div className="flex gap-4 items-center">
-        {user && (
-          <div className="flex flex-col">
-            <p className="font-[family-name:var(--font-lemon)] text-primary-dark-mode text-md">
-              Welcome back {username}
-            </p>
-          </div>
-        )}
-        {user && <LogoutButton />}
-        {!user && (
-          <>
-            <Button asChild>
-              <Link
-                href="/sign-in"
-                className="font-[family-name:var(--font-lemon)]  py-5 px-6 text-white"
-              >
-                Sign In
-              </Link>
-            </Button>
-            <Button asChild variant="secondary">
-              <Link
-                href="/sign-up"
-                className="font-[family-name:var(--font-lemon)] py-5 px-6"
-              >
-                Sign Up
-              </Link>
-            </Button>
-          </>
-        )}
-        <DarkModeToggle />
+      <div className="hidden md:flex gap-2 items-center">
+        <DesktopNavigation user={user} />
       </div>
+      <MobileNavigation user={user} />
     </header>
   );
 }

@@ -12,7 +12,6 @@ type AuthPageProps = Readonly<{
   type: 'sign-in' | 'sign-up';
 }>;
 
-// <div className="flex min-h-[calc(100vh-64px)] w-full items-center justify-center">
 function AuthPage({
   title = 'Auth Page',
   description = 'Please sign in or sign up to continue',

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { logoutAction } from '@/actions/user';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 
 function LogoutButton() {
   const [loading, setLoading] = useState(false);
@@ -28,7 +28,7 @@ function LogoutButton() {
   };
   return (
     <Button
-      className="w-24 text-lemon-font"
+      className="w-full md:w-24 text-lemon-font"
       variant="outline"
       onClick={handleLogout}
       disabled={loading}

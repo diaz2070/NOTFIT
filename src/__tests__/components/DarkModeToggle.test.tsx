@@ -5,7 +5,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useTheme } from 'next-themes';
-import DarkModeToggle from '@/components/DarkModeToggle';
+import DarkModeToggle from '@/components/Navigation/DarkModeToggle';
 
 jest.mock('next-themes', () => ({
   useTheme: jest.fn(),
