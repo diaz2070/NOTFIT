@@ -1,6 +1,6 @@
 'use client';
 
-import Modal from '@/components/exercise/ExerciseModal';
+import Modal from '@/components/Exercise/ExerciseModal';
 import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { Exercise } from '@prisma/client';
