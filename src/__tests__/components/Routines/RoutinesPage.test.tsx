@@ -1,5 +1,11 @@
 import RoutinesPage from '@/components/routines/RoutinesPage';
-import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import { Routine, RoutineExercise, Exercise } from '@prisma/client';
 import * as useRoutinesHook from '@/hooks/useRoutines';
 
@@ -85,7 +91,6 @@ describe('<RoutinesPage />', () => {
       expect(screen.queryByText(/Leg Day/)).not.toBeInTheDocument();
     });
   });
-
 
   it('renders pagination when routines exceed page limit', () => {
     const manyRoutines = Array.from({ length: 8 }, (_, i) => ({
