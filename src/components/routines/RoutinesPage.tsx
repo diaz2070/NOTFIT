@@ -22,7 +22,14 @@ import {
 import { Plus, Edit, Trash2, Target, Search } from 'lucide-react';
 import Link from 'next/link';
 import useRoutines from '@/hooks/useRoutines';
-import { Pagination } from '@/components/ui/pagination';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
+} from '@/components/ui/pagination';
 
 type RoutineWithExercises = Routine & {
   exercises: (RoutineExercise & {
@@ -32,8 +39,8 @@ type RoutineWithExercises = Routine & {
 
 const ITEMS_PER_PAGE = 6;
 
-export default function RoutinesPage() {
-  const { routines, loading } = useRoutines();
+export default function RoutinesPage({ userId }: { userId: string }) {
+  const { routines, isPending } = useRoutines(userId);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterDay, setFilterDay] = useState('all');
   const [sortBy, setSortBy] = useState('name');
@@ -90,7 +97,7 @@ export default function RoutinesPage() {
       : 'No se encontraron rutinas';
 
   let content;
-  if (loading) {
+  if (isPending) {
     content = <p className="text-center">Cargando rutinas...</p>;
   } else if (filteredAndSortedRoutines.length === 0) {
     content = (
@@ -169,11 +176,38 @@ export default function RoutinesPage() {
             </Card>
           ))}
         </div>
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-        />
+
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href="#"
+                onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+              />
+            </PaginationItem>
+
+            {Array.from({ length: totalPages }, (_, i) => (
+              <PaginationItem key={i}>
+                <PaginationLink
+                  href="#"
+                  isActive={i + 1 === currentPage}
+                  onClick={() => setCurrentPage(i + 1)}
+                >
+                  {i + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+
+            <PaginationItem>
+              <PaginationNext
+                href="#"
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+                }
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </div>
     );
   }
