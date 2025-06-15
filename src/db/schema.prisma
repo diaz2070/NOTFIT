@@ -104,7 +104,7 @@ model RoutineExercise {
   exerciseId   String
   sets         Int
   reps         Int
-  targetWeight Float?
+  targetWeight Float
   restTime     Int?
   order        Int
   note         String?

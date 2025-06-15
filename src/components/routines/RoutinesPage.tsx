@@ -1,6 +1,6 @@
 'use client';
 
-import { Routine, RoutineExercise, Exercise } from '@prisma/client';
+import { Routine, RoutineExercise, Exercise, DayOfWeek } from '@prisma/client';
 import { useState, useMemo } from 'react';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -41,7 +41,7 @@ const ITEMS_PER_PAGE = 6;
 export default function RoutinesPage({ userId }: { userId: string }) {
   const { routines, isPending, setRoutines } = useRoutines(userId);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterDay, setFilterDay] = useState('all');
+  const [filterDay, setFilterDay] = useState<'all' | DayOfWeek>('all');
   const [sortBy, setSortBy] = useState('name');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRoutine, setSelectedRoutine] =
@@ -101,8 +101,8 @@ export default function RoutinesPage({ userId }: { userId: string }) {
   );
 
   const handleFilterChange =
-    (setter: (value: string) => void) => (value: string) => {
-      setter(value);
+    (setter: (value: DayOfWeek | 'all') => void) => (value: string) => {
+      setter(value as DayOfWeek | 'all');
       setCurrentPage(1);
     };
 
