@@ -8,9 +8,18 @@ import { prisma } from '@/db/prisma';
 
 import type { z } from 'zod';
 
-import { createClient } from '@/auth/server';
-import { signUpAction, signInAction, logoutAction } from '@/actions/user';
+import { createClient, getUser } from '@/auth/server';
+import {
+  signUpAction,
+  signInAction,
+  logoutAction,
+  changePasswordAction,
+  updateUserInfoAction,
+} from '@/actions/user';
+
 import { signUpSchema, signInSchema } from '@/utils/validators/authSchema';
+import { ChangePasswordFields } from '@/utils/validators/changePasswordSchema';
+import { UserInfoFields } from '@/utils/validators/userInfoSchema';
 import handleError from '@/utils/handle';
 
 type SignUpSchemaType = z.infer<typeof signUpSchema>;
@@ -18,12 +27,14 @@ type SignInSchemaType = z.infer<typeof signInSchema>;
 
 jest.mock('@/auth/server', () => ({
   createClient: jest.fn(),
+  getUser: jest.fn(),
 }));
 
 jest.mock('@/db/prisma', () => ({
   prisma: {
     user: {
       create: jest.fn(),
+      update: jest.fn(),
     },
   },
 }));
@@ -35,6 +46,7 @@ const mockedHandleError = jest.mocked(handleError);
 const mockedPrisma = prisma as unknown as {
   user: {
     create: jest.Mock;
+    update: jest.Mock;
   };
 };
 
@@ -251,5 +263,151 @@ describe('logoutAction', () => {
     const res = await logoutAction();
     expect(mockAuth.signOut).toHaveBeenCalled();
     expect(res.errorMessage).toBe('Logout failed');
+  });
+});
+
+describe('changePasswordAction', () => {
+  const validValues: ChangePasswordFields = {
+    currentPassword: 'OldPassword123!',
+    newPassword: 'NewPassword123!',
+    confirmPassword: 'NewPassword123!',
+  };
+
+  const email = 'john@example.com';
+
+  it('returns 400 for invalid input', async () => {
+    const invalid = {
+      ...validValues,
+      newPassword: 'short',
+      confirmPassword: 'short',
+    };
+    const res = await changePasswordAction(
+      email,
+      invalid as ChangePasswordFields,
+    );
+    expect(res.status).toBe(400);
+    expect(res.errorMessage).toContain('at least 8 characters');
+  });
+
+  it('returns 401 if old password is incorrect', async () => {
+    const mockAuth = {
+      signInWithPassword: jest
+        .fn()
+        .mockResolvedValue({ error: new Error('Wrong password') }),
+      updateUser: jest.fn(),
+    };
+
+    mockedCreateClient.mockResolvedValue({
+      auth: mockAuth,
+    } as unknown as SupabaseClient);
+
+    const res = await changePasswordAction(email, validValues);
+    expect(res.status).toBe(401);
+    expect(res.errorMessage).toContain('Old password is incorrect');
+  });
+
+  it('returns 500 if updateUser fails', async () => {
+    const mockAuth = {
+      signInWithPassword: jest.fn().mockResolvedValue({ error: null }),
+      updateUser: jest
+        .fn()
+        .mockResolvedValue({ error: new Error('Update failed') }),
+    };
+
+    mockedCreateClient.mockResolvedValue({
+      auth: mockAuth,
+    } as unknown as SupabaseClient);
+    mockedHandleError.mockReturnValue({
+      status: 500,
+      errorMessage: 'Update failed',
+    });
+
+    const res = await changePasswordAction(email, validValues);
+    expect(res.status).toBe(500);
+    expect(res.errorMessage).toBe('Update failed');
+  });
+
+  it('returns 200 if password updated successfully', async () => {
+    const mockAuth = {
+      signInWithPassword: jest.fn().mockResolvedValue({ error: null }),
+      updateUser: jest.fn().mockResolvedValue({ error: null }),
+    };
+
+    mockedCreateClient.mockResolvedValue({
+      auth: mockAuth,
+    } as unknown as SupabaseClient);
+
+    const res = await changePasswordAction(email, validValues);
+    expect(res.status).toBe(200);
+    expect(res.errorMessage).toBeNull();
+  });
+});
+
+describe('updateUserInfoAction', () => {
+  const validValues: UserInfoFields = {
+    name: 'Updated Name',
+    email: 'new@example.com',
+    username: 'updateduser',
+  };
+
+  it('returns 400 for invalid input', async () => {
+    const invalid = { ...validValues, email: 'bad' };
+    const res = await updateUserInfoAction(invalid as UserInfoFields);
+    expect(res.status).toBe(400);
+    expect(res.errorMessage).toContain('Invalid input');
+  });
+
+  it('returns 401 if user not authenticated', async () => {
+    const mockAuth = {
+      updateUser: jest.fn(),
+    };
+
+    mockedCreateClient.mockResolvedValue({
+      auth: mockAuth,
+    } as unknown as SupabaseClient);
+    (getUser as jest.Mock).mockResolvedValue(null);
+
+    const res = await updateUserInfoAction(validValues);
+    expect(res.status).toBe(401);
+    expect(res.errorMessage).toContain('User not authenticated');
+  });
+
+  it('returns 500 if Supabase updateUser fails', async () => {
+    const mockAuth = {
+      updateUser: jest
+        .fn()
+        .mockResolvedValue({ error: new Error('update fail') }),
+    };
+
+    mockedCreateClient.mockResolvedValue({
+      auth: mockAuth,
+    } as unknown as SupabaseClient);
+    (getUser as jest.Mock).mockResolvedValue({ id: 'user-123' });
+
+    mockedHandleError.mockReturnValue({
+      status: 500,
+      errorMessage: 'update fail',
+    });
+
+    const res = await updateUserInfoAction(validValues);
+    expect(res.status).toBe(500);
+    expect(res.errorMessage).toBe('update fail');
+  });
+
+  it('returns 200 on successful profile update', async () => {
+    const mockAuth = {
+      updateUser: jest.fn().mockResolvedValue({ error: null }),
+    };
+
+    mockedCreateClient.mockResolvedValue({
+      auth: mockAuth,
+    } as unknown as SupabaseClient);
+    (getUser as jest.Mock).mockResolvedValue({ id: 'user-123' });
+
+    mockedPrisma.user.update.mockResolvedValue({});
+
+    const res = await updateUserInfoAction(validValues);
+    expect(res.status).toBe(200);
+    expect(res.errorMessage).toBeNull();
   });
 });
