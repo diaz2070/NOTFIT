@@ -44,7 +44,7 @@ export default function DeleteRoutineModal({
             <Trash2 className="h-5 w-5 text-red-500" />
             Delete Routine
           </DialogTitle>
-          <DialogDescription className='mt-3'>
+          <DialogDescription className="mt-3">
             Are you sure you want to delete the routine{' '}
             <span className="font-semibold">&quot;{routine?.name}&quot;</span>?
           </DialogDescription>
@@ -62,9 +62,9 @@ export default function DeleteRoutineModal({
                 <span className="font-medium">{routine.days.join(', ')}</span>
               </div>
             </div>
-              <DialogDescription className="text-sm text-red-800 text-red-400 mt-3">
-                All data related to this routine will be lost.
-              </DialogDescription>
+            <DialogDescription className="text-sm text-red-800 text-red-400 mt-3">
+              All data related to this routine will be lost.
+            </DialogDescription>
           </div>
         )}
 
@@ -72,7 +72,10 @@ export default function DeleteRoutineModal({
           <Button variant="outline" onClick={onCancel}>
             Cancel
           </Button>
-          <Button onClick={onConfirm} className="bg-red-600 hover:bg-red-700 text-white">
+          <Button
+            onClick={onConfirm}
+            className="bg-red-600 hover:bg-red-700 text-white"
+          >
             <Trash2 className="h-4 w-4" />
             Delete Routine
           </Button>
