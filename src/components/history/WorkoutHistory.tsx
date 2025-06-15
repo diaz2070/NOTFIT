@@ -207,7 +207,7 @@ export default function HistoryPage() {
               <div className="space-y-2">
                 <Label htmlFor="routine">Routine</Label>
                 <Select value={filterRoutine} onValueChange={setFilterRoutine}>
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -224,7 +224,7 @@ export default function HistoryPage() {
               <div className="space-y-2">
                 <Label htmlFor="month">Month</Label>
                 <Select value={filterMonth} onValueChange={setFilterMonth}>
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
