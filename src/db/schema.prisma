@@ -19,6 +19,7 @@ enum DayOfWeek {
 
 enum WorkoutStatus {
   IN_PROGRESS
+  PAUSED
   COMPLETED
 }
 

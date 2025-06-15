@@ -1,0 +1,51 @@
+import { Prisma } from '@prisma/client';
+import type { WorkoutLog, WorkoutLogEntry, Exercise } from '@prisma/client';
+
+export type RoutineWithExercises = Prisma.RoutineGetPayload<{
+  include: {
+    exercises: {
+      include: {
+        exercise: true;
+      };
+    };
+  };
+}>;
+
+export type CompletedSet = {
+  reps: number;
+  weight: number;
+  completed: boolean;
+};
+
+export type LoggedExercise = {
+  exerciseId: string;
+  exerciseName: string;
+  targetSets: number;
+  targetReps: number;
+  targetWeight: number;
+  completedSets: CompletedSet[];
+  order: number;
+};
+
+export type WorkoutEntryWithExercise = {
+  exerciseId: string;
+  reps: number;
+  weight: number;
+  completed: boolean;
+  exercise: {
+    name: string;
+  };
+};
+
+export type WorkoutLogWithEntries = WorkoutLog & {
+  entries: (WorkoutLogEntry & {
+    exercise: Exercise & {
+      routines: {
+        order: number;
+        sets: number;
+        reps: number;
+        targetWeight: number;
+      }[];
+    };
+  })[];
+};

@@ -9,7 +9,7 @@ function ButtonNavigation() {
   const navigation = [
     { name: 'Home', href: '/', icon: Home },
     { name: 'Routines', href: '/ex', icon: Calendar },
-    { name: 'Log', href: '/workout/log', icon: Plus },
+    { name: 'Log', href: '/log', icon: Plus },
     { name: 'History', href: '/history', icon: History },
     { name: 'Profile', href: '/profile', icon: UserIcon },
   ];

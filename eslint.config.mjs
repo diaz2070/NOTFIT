@@ -36,6 +36,7 @@ export default [
       'react/jsx-filename-extension': [1, { extensions: ['.ts', '.tsx'] }],
       'import/no-extraneous-dependencies': 'off',
       '@typescript-eslint/no-unused-vars': ['warn'],
+      'react/no-array-index-key': 'off',
       'import/extensions': [
         'error',
         'ignorePackages',

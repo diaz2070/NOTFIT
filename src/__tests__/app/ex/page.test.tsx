@@ -53,7 +53,7 @@ describe('<Ex />', () => {
     render(<Ex />);
     const triggerButton = screen.getByText('TriggerSelect');
     await userEvent.click(triggerButton);
-    await userEvent.click(triggerButton); // try to add it again
+    await userEvent.click(triggerButton);
 
     const names = screen.getByText(/Push Up/);
     expect(names).toBeInTheDocument();
