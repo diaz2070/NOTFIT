@@ -26,5 +26,5 @@ export default function useRoutines(userId?: string, open = true) {
     });
   }, [open, userId]);
 
-  return { routines, isPending };
+  return { routines, isPending, setRoutines };
 }
