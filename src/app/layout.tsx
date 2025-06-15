@@ -36,10 +36,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {/* <DarkModeToggle /> */}
           <div className="flex min-h-screen w-full flex-col">
             <Header />
-            <main className="flex-1 flex-col px-4 pb-9 xl:px-8 font-[family-name:var(--font-inter)]">
+            <main className="flex-1 flex-col font-[family-name:var(--font-inter)]">
               {children}
             </main>
           </div>

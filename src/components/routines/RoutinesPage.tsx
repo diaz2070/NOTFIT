@@ -237,7 +237,7 @@ export default function RoutinesPage({ userId }: { userId: string }) {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background px-4 pb-9 xl:px-8">
       <main className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
           <div>

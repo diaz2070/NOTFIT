@@ -31,7 +31,7 @@ export default async function Log() {
   });
 
   return (
-    <div>
+    <div className=" px-4 pb-9 xl:px-8">
       <WorkoutLogPage routines={routines} restoredLog={restoredLog} />
     </div>
   );
