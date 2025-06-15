@@ -45,7 +45,6 @@ describe('UserInformationWrapper', () => {
 
     render(await UserInformationWrapper());
 
-  
     expect(screen.getByTestId('ProfileInformation')).toHaveTextContent(
       'Name: Jane Doe, Email: jane@example.com, Username: janedoe',
     );
