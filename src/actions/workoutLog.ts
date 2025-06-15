@@ -2,11 +2,7 @@
 
 import { getUser } from '@/auth/server';
 import { prisma } from '@/db/prisma';
-import {
-  CompletedSet,
-  LoggedExercise,
-  WorkoutLogWithEntries,
-} from '@/types/routine';
+import { LoggedExercise, WorkoutLogWithEntries } from '@/types/routine';
 import handleError from '@/utils/handle';
 import { WorkoutLog } from '@prisma/client';
 
@@ -15,6 +11,20 @@ export type ApiResponse<T> = {
   errorMessage: string;
   data: T | null;
 };
+
+function mapWorkoutEntries(workoutData: LoggedExercise[]) {
+  const sortedData = [...workoutData].sort((a, b) => a.order - b.order);
+  return sortedData.flatMap((exercise) =>
+    exercise.completedSets.map((set, setIndex) => ({
+      exerciseId: exercise.exerciseId,
+      setNumber: setIndex + 1,
+      weight: set.weight,
+      reps: set.reps,
+      completed: set.completed,
+      completedSets: JSON.stringify(exercise.completedSets),
+    })),
+  );
+}
 
 export async function startWorkoutLog(
   routineId: string,
@@ -68,22 +78,7 @@ export async function saveWorkoutLog(
         endTime: new Date(endTime),
         status: 'COMPLETED',
         comment: notes,
-        entries: {
-          create: workoutData
-            .sort((a: LoggedExercise, b: LoggedExercise) => a.order - b.order)
-            .flatMap((exercise: LoggedExercise) =>
-              exercise.completedSets.map(
-                (set: CompletedSet, setIndex: number) => ({
-                  exerciseId: exercise.exerciseId,
-                  setNumber: setIndex + 1,
-                  weight: set.weight,
-                  reps: set.reps,
-                  completed: set.completed,
-                  completedSets: JSON.stringify(exercise.completedSets),
-                }),
-              ),
-            ),
-        },
+        entries: { create: mapWorkoutEntries(workoutData) },
       },
     });
 
@@ -128,20 +123,7 @@ export async function pauseWorkoutLog(
         status: 'PAUSED',
         pausedAt: new Date(),
         entries: {
-          create: workoutData
-            .sort((a: LoggedExercise, b: LoggedExercise) => a.order - b.order)
-            .flatMap((exercise: LoggedExercise) =>
-              exercise.completedSets.map(
-                (set: CompletedSet, setIndex: number) => ({
-                  exerciseId: exercise.exerciseId,
-                  setNumber: setIndex + 1,
-                  weight: set.weight,
-                  reps: set.reps,
-                  completed: set.completed,
-                  completedSets: JSON.stringify(exercise.completedSets),
-                }),
-              ),
-            ),
+          create: mapWorkoutEntries(workoutData),
         },
       },
     });
