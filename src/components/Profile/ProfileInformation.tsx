@@ -65,11 +65,9 @@ export default function ProfileInformation({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <User className="h-5 w-5" />
-          Información Personal
+          Personal Information
         </CardTitle>
-        <CardDescription>
-          Actualiza tu información básica de perfil
-        </CardDescription>
+        <CardDescription>Update your basic profile information</CardDescription>
       </CardHeader>
 
       <Form {...form}>
@@ -79,8 +77,8 @@ export default function ProfileInformation({
               control={form.control}
               id="name"
               name="name"
-              label="Nombre completo"
-              placeholder="Tu nombre"
+              label="Full Name"
+              placeholder="Ej: John Doe"
               type="text"
               required
               disabled={isPending}
@@ -90,8 +88,8 @@ export default function ProfileInformation({
               control={form.control}
               id="email"
               name="email"
-              label="Correo electrónico"
-              placeholder="tu@email.com"
+              label="Email"
+              placeholder="your@email.com"
               type="email"
               required
               disabled={isPending}
@@ -101,7 +99,7 @@ export default function ProfileInformation({
               control={form.control}
               id="username"
               name="username"
-              label="Nombre de usuario"
+              label="Username"
               placeholder="ej: le_diaz"
               type="text"
               required
@@ -110,7 +108,8 @@ export default function ProfileInformation({
 
             <Button type="submit" className="w-full" disabled={isPending}>
               <Save className="h-4 w-4 mr-2" />
-              Guardar Cambios
+              {isPending && <span className="ml-2 animate-spin">...</span>}
+              Save Changes
             </Button>
           </CardContent>
         </form>

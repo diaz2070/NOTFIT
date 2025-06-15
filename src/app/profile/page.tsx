@@ -8,9 +8,11 @@ export default async function ProfilePage() {
     <div className="min-h-screen bg-background">
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Mi Perfil</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            My Profile
+          </h1>
           <p className="text-muted-foreground">
-            Gestiona tu información personal y configuración de cuenta
+            Manage your personal information and account settings
           </p>
         </div>
 

@@ -64,10 +64,10 @@ export default function ChangePasswordForm({ email }: Readonly<Props>) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Lock className="h-5 w-5" />
-          Cambiar Contraseña
+          Change Password
         </CardTitle>
         <CardDescription>
-          Actualiza tu contraseña para mantener tu cuenta segura
+          Update your password to keep your account secure
         </CardDescription>
       </CardHeader>
 
@@ -78,9 +78,9 @@ export default function ChangePasswordForm({ email }: Readonly<Props>) {
               control={form.control}
               id="currentPassword"
               name="currentPassword"
-              label="Contraseña actual"
+              label="Current Password"
               type="password"
-              placeholder="Ingresa tu contraseña actual"
+              placeholder="Enter your current password"
               required
               disabled={isPending}
             />
@@ -89,9 +89,9 @@ export default function ChangePasswordForm({ email }: Readonly<Props>) {
               control={form.control}
               id="newPassword"
               name="newPassword"
-              label="Nueva contraseña"
+              label="New Password"
               type="password"
-              placeholder="Mínimo 8 caracteres"
+              placeholder="Minimum 8 characters"
               required
               disabled={isPending}
             />
@@ -100,9 +100,9 @@ export default function ChangePasswordForm({ email }: Readonly<Props>) {
               control={form.control}
               id="confirmPassword"
               name="confirmPassword"
-              label="Confirmar nueva contraseña"
+              label="Confirm New Password"
               type="password"
-              placeholder="Repite la nueva contraseña"
+              placeholder="Repeat the new password"
               required
               disabled={isPending}
             />
@@ -111,7 +111,7 @@ export default function ChangePasswordForm({ email }: Readonly<Props>) {
               {isPending ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                'Cambiar Contraseña'
+                'Change Password'
               )}
             </Button>
           </CardContent>
