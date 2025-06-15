@@ -44,28 +44,27 @@ export default function DeleteRoutineModal({
             <Trash2 className="h-5 w-5 text-red-500" />
             Delete Routine
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className='mt-3'>
             Are you sure you want to delete the routine{' '}
-            <span className="font-semibold">&quot;{routine?.name}&quot;</span>
+            <span className="font-semibold">&quot;{routine?.name}&quot;</span>?
           </DialogDescription>
         </DialogHeader>
 
         {routine && (
-          <div className="py-4">
+          <div className="py-1">
             <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Exercises:</span>
+              <div className=" text-sm">
+                <span className="text-muted-foreground">Exercises: </span>
                 <span className="font-medium">{routine.exercises}</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Days:</span>
+              <div className="text-sm">
+                <span className="text-muted-foreground">Days: </span>
                 <span className="font-medium">{routine.days.join(', ')}</span>
               </div>
             </div>
-            <p className="text-sm text-red-600 dark:text-red-400 mt-3">
-              This action cannot be undone. All data related to this routine
-              will be lost.
-            </p>
+              <DialogDescription className="text-sm text-red-800 text-red-400 mt-3">
+                All data related to this routine will be lost.
+              </DialogDescription>
           </div>
         )}
 
@@ -73,8 +72,8 @@ export default function DeleteRoutineModal({
           <Button variant="outline" onClick={onCancel}>
             Cancel
           </Button>
-          <Button variant="destructive" onClick={onConfirm}>
-            <Trash2 className="h-4 w-4 mr-2" />
+          <Button onClick={onConfirm} className="bg-red-600 hover:bg-red-700 text-white">
+            <Trash2 className="h-4 w-4" />
             Delete Routine
           </Button>
         </DialogFooter>
