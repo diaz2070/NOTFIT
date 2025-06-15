@@ -75,7 +75,7 @@ export default function HistoryPage() {
       );
     const matchesRoutine =
       filterRoutine === 'all' || workout.routine === filterRoutine;
-    const monthLabel = new Date(workout.date).toLocaleString('es-ES', {
+    const monthLabel = new Date(workout.date).toLocaleString('en-US', {
       month: 'long',
       year: 'numeric',
     });
@@ -105,7 +105,7 @@ export default function HistoryPage() {
   if (loading) {
     return (
       <div className="p-8 text-center text-muted-foreground">
-        Cargando historial...
+        Loading history...
       </div>
     );
   }
@@ -113,7 +113,7 @@ export default function HistoryPage() {
   if (error) {
     return (
       <div className="p-8 text-center text-red-500">
-        Error al cargar: {error.message}
+        Error while loading: {error.message}
       </div>
     );
   }
@@ -123,10 +123,10 @@ export default function HistoryPage() {
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">
-            Historial de Entrenamientos
+            Workout history
           </h1>
           <p className="text-muted-foreground">
-            Revisa tu progreso y entrenamientos anteriores
+            Check your progress and past trainings
           </p>
         </div>
 
@@ -135,23 +135,19 @@ export default function HistoryPage() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Total Entrenamientos
+                Total workouts
               </CardTitle>
               <Target className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.totalWorkouts}</div>
-              <p className="text-xs text-muted-foreground">
-                En los últimos 30 días
-              </p>
+              <p className="text-xs text-muted-foreground">Last 30 days</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Tiempo Total
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">Total Time</CardTitle>
               <Clock className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -159,7 +155,7 @@ export default function HistoryPage() {
                 {Math.round(stats.totalTime / 60)}h {stats.totalTime % 60}m
               </div>
               <p className="text-xs text-muted-foreground">
-                Tiempo invertido entrenando
+                Time spent training
               </p>
             </CardContent>
           </Card>
@@ -167,14 +163,14 @@ export default function HistoryPage() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Duración Promedio
+                Average Duration
               </CardTitle>
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.avgDuration} min</div>
               <p className="text-xs text-muted-foreground">
-                Por sesión de entrenamiento
+                Per training session
               </p>
             </CardContent>
           </Card>
@@ -185,7 +181,7 @@ export default function HistoryPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Filter className="h-5 w-5" />
-              Filtros
+              Filters
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -196,7 +192,7 @@ export default function HistoryPage() {
                   <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <Input
                     id="search"
-                    placeholder="Buscar rutina o ejercicio..."
+                    placeholder="Search routine or exercise..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="pl-10"
@@ -211,7 +207,7 @@ export default function HistoryPage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Todas las rutinas</SelectItem>
+                    <SelectItem value="all">All routines</SelectItem>
                     {routines.map((routine) => (
                       <SelectItem key={routine} value={routine}>
                         {routine}
@@ -228,7 +224,7 @@ export default function HistoryPage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Todos los meses</SelectItem>
+                    <SelectItem value="all">All months</SelectItem>
                     {months.map((month) => (
                       <SelectItem key={month} value={month}>
                         {month}
@@ -248,10 +244,10 @@ export default function HistoryPage() {
               <CardContent>
                 <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-2">
-                  No se encontraron entrenamientos
+                  No training found
                 </h3>
                 <p className="text-gray-500">
-                  Intenta ajustar los filtros o realiza tu primer entrenamiento
+                  Try adjusting the filters or do your first workout
                 </p>
               </CardContent>
             </Card>
@@ -283,9 +279,7 @@ export default function HistoryPage() {
                 <CardContent>
                   <div className="space-y-4">
                     <div>
-                      <h4 className="font-medium mb-2">
-                        Ejercicios realizados:
-                      </h4>
+                      <h4 className="font-medium mb-2">Exercises performed:</h4>
                       {(() => {
                         const grouped = Object.values(
                           workout.exercises.reduce<
@@ -334,7 +328,7 @@ export default function HistoryPage() {
                     </div>
                     {workout.notes && (
                       <div>
-                        <h4 className="font-medium mb-1">Notas:</h4>
+                        <h4 className="font-medium mb-1">Notes:</h4>
                         <p className="text-sm text-gray-600 italic">
                           &quot;{workout.notes}&quot;
                         </p>
