@@ -17,6 +17,6 @@ describe('HistoryRoutePage', () => {
 
   it('has correct metadata', () => {
     expect(metadata.title).toBe('Workout History');
-    expect(metadata.description).toBe('Check your workout history in NotFit');
+    expect(metadata.description).toBe('Check your workout history');
   });
 });

@@ -3,7 +3,7 @@ import HistoryPage from '@/components/history/WorkoutHistory';
 
 export const metadata = {
   title: 'Workout History',
-  description: 'Check your workout history in NotFit',
+  description: 'Check your workout history',
 };
 
 export default function HistoryRoutePage() {

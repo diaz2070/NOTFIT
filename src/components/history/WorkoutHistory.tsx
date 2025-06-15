@@ -308,13 +308,16 @@ export default function HistoryPage() {
                               >
                                 <span className="text-sm">{exercise.name}</span>
                                 <div className="flex gap-2">
-                                  <Badge variant="outline" className="text-xs">
+                                  <Badge
+                                    variant="outline"
+                                    className="bg-primary text-xs"
+                                  >
                                     {exercise.sets}x{exercise.reps}
                                   </Badge>
                                   {exercise.weight !== '0kg' && (
                                     <Badge
                                       variant="outline"
-                                      className="text-xs"
+                                      className="text-xs bg-primary"
                                     >
                                       {exercise.weight}
                                     </Badge>
