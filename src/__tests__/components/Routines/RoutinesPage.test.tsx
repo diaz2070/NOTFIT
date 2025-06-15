@@ -139,4 +139,42 @@ describe('<RoutinesPage />', () => {
     const prev = screen.getByRole('link', { name: /previous/i });
     fireEvent.click(prev);
   });
+
+  it('closes delete modal on cancel', () => {
+    jest.spyOn(useRoutinesHook, 'default').mockReturnValue({
+      routines: mockRoutines,
+      isPending: false,
+      setRoutines: jest.fn(),
+    });
+
+    render(<RoutinesPage userId="u1" />);
+    fireEvent.click(screen.getAllByRole('button', { name: '' })[1]); // Trash
+
+    const cancelBtn = screen.getByText('Cancel');
+    fireEvent.click(cancelBtn);
+
+    expect(screen.queryByText(/Delete Routine/)).not.toBeInTheDocument();
+  });
+
+  it('sorts routines by number of exercises', async () => {
+    const routines = [
+      { ...mockRoutines[0], exercises: Array(3).fill({}) },
+      { ...mockRoutines[1], exercises: [] },
+    ];
+    jest.spyOn(useRoutinesHook, 'default').mockReturnValue({
+      routines,
+      isPending: false,
+      setRoutines: jest.fn(),
+    });
+
+    render(<RoutinesPage userId="u1" />);
+    fireEvent.click(screen.getByRole('combobox', { name: /sort by/i }));
+    const dropdown = await screen.findByRole('listbox');
+    fireEvent.click(within(dropdown).getByText('Number of exercises'));
+
+    const matches = screen.getAllByText(
+      (_, node) => node?.textContent?.trim() === '3 exercises',
+    );
+    expect(matches.length).toBeGreaterThan(0);
+  });
 });

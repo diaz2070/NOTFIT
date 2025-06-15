@@ -27,6 +27,9 @@ import {
   PaginationNext,
 } from '@/components/ui/pagination';
 
+import DeleteRoutineModal from '@/components/routines/[id]/delete/DeleteRoutineModal';
+import useDeleteRoutine from '@/hooks/useDeleteRoutine';
+
 type RoutineWithExercises = Routine & {
   exercises: (RoutineExercise & {
     exercise: Exercise;
@@ -36,11 +39,14 @@ type RoutineWithExercises = Routine & {
 const ITEMS_PER_PAGE = 6;
 
 export default function RoutinesPage({ userId }: { userId: string }) {
-  const { routines, isPending } = useRoutines(userId);
+  const { routines, isPending, setRoutines } = useRoutines(userId);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterDay, setFilterDay] = useState('all');
   const [sortBy, setSortBy] = useState('name');
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedRoutine, setSelectedRoutine] =
+    useState<RoutineWithExercises | null>(null);
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const days = [
     'Monday',
@@ -51,6 +57,19 @@ export default function RoutinesPage({ userId }: { userId: string }) {
     'Saturday',
     'Sunday',
   ];
+
+  const openDeleteModal = (routine: RoutineWithExercises) => {
+    setSelectedRoutine(routine);
+    setModalOpen(true);
+  };
+
+  const { deleteRoutine } = useDeleteRoutine(() => {
+    setModalOpen(false);
+    setSelectedRoutine(null);
+    setModalOpen(false);
+    setSelectedRoutine(null);
+    setRoutines((prev) => prev.filter((r) => r.id !== selectedRoutine?.id));
+  });
 
   const filteredAndSortedRoutines = useMemo(() => {
     const filtered = routines.filter((routine: RoutineWithExercises) => {
@@ -143,7 +162,11 @@ export default function RoutinesPage({ userId }: { userId: string }) {
                         <Edit className="h-4 w-4" />
                       </Link>
                     </Button>
-                    <Button variant="ghost" size="icon">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => openDeleteModal(routine)}
+                    >
                       <Trash2 className="h-4 w-4 text-red-500" />
                     </Button>
                   </div>
@@ -166,7 +189,7 @@ export default function RoutinesPage({ userId }: { userId: string }) {
                     >
                       <Link href={`/routines/${routine.id}`}>View Details</Link>
                     </Button>
-                    <Button size="sm" className="flex-1" asChild>
+                    <Button size="sm" className="flex-1 text-white" asChild>
                       <Link href={`/workout/log?routine=${routine.id}`}>
                         Use Routine
                       </Link>
@@ -225,7 +248,7 @@ export default function RoutinesPage({ userId }: { userId: string }) {
               Manage your workout routines
             </p>
           </div>
-          <Button asChild>
+          <Button className="text-white" asChild>
             <Link href="/routines/new">
               <Plus className="h-4 w-4 mr-2" />
               New Routine
@@ -303,6 +326,24 @@ export default function RoutinesPage({ userId }: { userId: string }) {
             </div>
           </CardContent>
         </Card>
+
+        <DeleteRoutineModal
+          isOpen={isModalOpen}
+          routine={
+            selectedRoutine
+              ? {
+                  id: selectedRoutine.id,
+                  name: selectedRoutine.name,
+                  days: selectedRoutine.daysOfWeek,
+                  exercises: selectedRoutine.exercises.length,
+                }
+              : null
+          }
+          onConfirm={() => {
+            if (selectedRoutine) deleteRoutine(selectedRoutine.id, userId);
+          }}
+          onCancel={() => setModalOpen(false)}
+        />
 
         {content}
       </main>
