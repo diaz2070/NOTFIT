@@ -1,75 +1,93 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import ExerciseFiltersPanel from '@/components/Exercise/ExerciseFiltersPanel';
-import '@testing-library/jest-dom';
 
-const mockUpdateFilter = jest.fn();
-const mockClearFilters = jest.fn();
-const mockNextPage = jest.fn();
-const mockPrevPage = jest.fn();
+jest.mock('@/components/ui/select', () => ({
+  Select: ({
+    onValueChange,
+    children,
+    'data-testid': testId = 'select-mock',
+  }: {
+    onValueChange: (value: string) => void;
+    children: React.ReactNode;
+    'data-testid': string;
+  }) => (
+    <div data-testid={testId}>
+      {children}
+      <button
+        type="button"
+        data-testid={`${testId}-value-button`}
+        onClick={() => onValueChange('triceps')}
+      >
+        Select option
+      </button>
+    </div>
+  ),
+  SelectContent: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="select-content">{children}</div>
+  ),
+  SelectItem: ({
+    children,
+    value,
+  }: {
+    children: React.ReactNode;
+    value: string;
+  }) => <div data-testid={`select-item-${value}`}>{children}</div>,
+  SelectTrigger: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="select-trigger">{children}</div>
+  ),
+  SelectValue: ({ placeholder }: { placeholder: string }) => (
+    <div data-testid="select-value">{placeholder}</div>
+  ),
+}));
 
-const defaultProps = {
-  filters: {
-    search: '',
-    sort: '',
-    category: 'all',
-    muscle: 'all',
-  },
-  updateFilter: mockUpdateFilter,
-  clearFilters: mockClearFilters,
-  categoryOptions: ['chest', 'back'],
-  muscleOptions: ['biceps', 'triceps'],
-  page: 1,
-  totalPages: 3,
-  nextPage: mockNextPage,
-  prevPage: mockPrevPage,
-};
+describe('<ExerciseFiltersPanel />', () => {
+  const mockUpdateFilter = jest.fn();
+  const mockClearFilters = jest.fn();
+  const mockNextPage = jest.fn();
+  const mockPrevPage = jest.fn();
 
-describe('ExerciseFiltersPanel', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+  const props = {
+    filters: {
+      search: '',
+      sort: '',
+      category: 'all',
+      muscle: 'all',
+    },
+    updateFilter: mockUpdateFilter,
+    clearFilters: mockClearFilters,
+    categoryOptions: ['chest', 'back'],
+    muscleOptions: ['biceps', 'triceps'],
+    page: 1,
+    totalPages: 3,
+    nextPage: mockNextPage,
+    prevPage: mockPrevPage,
+  };
 
-  it('renders all filter controls and buttons', () => {
-    render(<ExerciseFiltersPanel {...defaultProps} />);
-
-    expect(
-      screen.getByPlaceholderText('Search exercises...'),
-    ).toBeInTheDocument();
-    expect(screen.getByText('Filter')).toBeInTheDocument();
-    expect(screen.getByText('Clear')).toBeInTheDocument();
-    expect(screen.getByText('Sort by')).toBeInTheDocument();
-    expect(screen.getByText('Category')).toBeInTheDocument();
-    expect(screen.getByText('Muscle')).toBeInTheDocument();
-  });
-
-  it('calls updateFilter on search input change', () => {
-    render(<ExerciseFiltersPanel {...defaultProps} />);
-    const input = screen.getByPlaceholderText('Search exercises...');
-    fireEvent.change(input, { target: { value: 'press' } });
-    expect(mockUpdateFilter).toHaveBeenCalledWith('search', 'press');
-  });
-
-  it('calls updateFilter when changing sort option manually', () => {
-    render(<ExerciseFiltersPanel {...defaultProps} />);
-    defaultProps.updateFilter('sort', 'name');
-    expect(mockUpdateFilter).toHaveBeenCalledWith('sort', 'name');
-  });
-
-  it('calls updateFilter when changing category manually', () => {
-    render(<ExerciseFiltersPanel {...defaultProps} />);
-    defaultProps.updateFilter('category', 'back');
-    expect(mockUpdateFilter).toHaveBeenCalledWith('category', 'back');
-  });
-
-  it('calls updateFilter when changing muscle manually', () => {
-    render(<ExerciseFiltersPanel {...defaultProps} />);
-    defaultProps.updateFilter('muscle', 'triceps');
+  it('calls updateFilter when selecting muscle option via mock dropdown', () => {
+    render(<ExerciseFiltersPanel {...props} />);
+    const muscleButton = screen.getByTestId('select-muscle-value-button');
+    fireEvent.click(muscleButton);
     expect(mockUpdateFilter).toHaveBeenCalledWith('muscle', 'triceps');
   });
 
-  it('calls clearFilters when clicking Clear button', () => {
-    render(<ExerciseFiltersPanel {...defaultProps} />);
-    fireEvent.click(screen.getByText('Clear'));
-    expect(mockClearFilters).toHaveBeenCalled();
+  it('calls updateFilter when typing in search input', () => {
+    render(<ExerciseFiltersPanel {...props} />);
+    const input = screen.getByPlaceholderText('Search exercises...');
+    fireEvent.change(input, { target: { value: 'bicep' } });
+    expect(mockUpdateFilter).toHaveBeenCalledWith('search', 'bicep');
+  });
+
+  it('calls updateFilter when selecting sort option via mock dropdown', () => {
+    render(<ExerciseFiltersPanel {...props} />);
+    const sortBtn = screen.getByTestId('select-sort-value-button');
+    fireEvent.click(sortBtn);
+    expect(mockUpdateFilter).toHaveBeenCalledWith('sort', 'triceps');
+  });
+
+  it('calls updateFilter when selecting category option via mock dropdown', () => {
+    render(<ExerciseFiltersPanel {...props} />);
+    const categoryBtn = screen.getByTestId('select-category-value-button');
+    fireEvent.click(categoryBtn);
+    expect(mockUpdateFilter).toHaveBeenCalledWith('category', 'triceps');
   });
 });

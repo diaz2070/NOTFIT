@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/react';
 import ButtonNavigation from '@/components/Navigation/ButtonNavigation';
 import '@testing-library/jest-dom';
 
-// Mock de usePathname
 jest.mock('next/navigation', () => ({
   usePathname: jest.fn(),
 }));
