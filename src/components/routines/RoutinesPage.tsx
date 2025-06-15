@@ -189,7 +189,7 @@ export default function RoutinesPage({ userId }: { userId: string }) {
                     >
                       <Link href={`/routines/${routine.id}`}>View Details</Link>
                     </Button>
-                    <Button size="sm" className="flex-1" asChild>
+                    <Button size="sm" className="flex-1 text-white" asChild>
                       <Link href={`/workout/log?routine=${routine.id}`}>
                         Use Routine
                       </Link>
@@ -248,7 +248,7 @@ export default function RoutinesPage({ userId }: { userId: string }) {
               Manage your workout routines
             </p>
           </div>
-          <Button asChild>
+          <Button className="text-white" asChild>
             <Link href="/routines/new">
               <Plus className="h-4 w-4 mr-2" />
               New Routine
