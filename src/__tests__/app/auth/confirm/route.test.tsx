@@ -39,7 +39,7 @@ describe('GET email confirmation handler', () => {
   it('redirects to "/" when OTP is valid', async () => {
     mockedCreateClient.mockResolvedValue({
       auth: {
-        verifyOtp: jest.fn().mockResolvedValue({ error: null }), // ✅ simulate success
+        verifyOtp: jest.fn().mockResolvedValue({ error: null }),
       },
     } as unknown as import('@supabase/supabase-js').SupabaseClient);
 

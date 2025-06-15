@@ -73,6 +73,7 @@ export default function ExerciseFiltersPanel({
         <div className="space-y-2">
           <Label className="text-sm font-medium">Sort by</Label>
           <Select
+            data-testid="select-sort"
             value={filters.sort}
             onValueChange={(val) => updateFilter('sort', val)}
           >
@@ -89,6 +90,7 @@ export default function ExerciseFiltersPanel({
         <div className="space-y-2">
           <Label className="text-sm font-medium">Category</Label>
           <Select
+            data-testid="select-category"
             value={filters.category}
             onValueChange={(val) => updateFilter('category', val)}
           >
@@ -109,6 +111,7 @@ export default function ExerciseFiltersPanel({
         <div className="space-y-2">
           <Label className="text-sm font-medium">Muscle</Label>
           <Select
+            data-testid="select-muscle"
             value={filters.muscle}
             onValueChange={(val) => updateFilter('muscle', val)}
           >

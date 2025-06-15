@@ -99,7 +99,11 @@ export default function WorkoutProgressBar({
         </p>
       </div>
       <div className="flex flex-col md:flex-row items-center gap-2">
-        <Badge variant="secondary" className="flex items-center gap-1">
+        <Badge
+          variant="secondary"
+          className="flex items-center gap-1"
+          data-testid="elapsed-time"
+        >
           <Timer className="h-3 w-3" />
           {formatTime(elapsed)}
         </Badge>

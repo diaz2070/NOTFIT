@@ -41,7 +41,6 @@ describe('useFilteredExercises', () => {
 
     const { result } = renderHook(() => useFilteredExercises(true));
 
-    // Wait for useEffect to resolve
     await act(async () => {});
 
     expect(getExercisesAction).toHaveBeenCalled();
@@ -87,7 +86,7 @@ describe('useFilteredExercises', () => {
     });
 
     expect(result.current.filters.search).toBe('biceps');
-    expect(result.current.filters.page).toBe(1); // reset page on filter update
+    expect(result.current.filters.page).toBe(1);
   });
 
   it('increments and decrements page correctly', () => {
@@ -103,7 +102,7 @@ describe('useFilteredExercises', () => {
       result.current.prevPage();
     });
 
-    expect(result.current.filters.page).toBe(1); // not less than 1
+    expect(result.current.filters.page).toBe(1);
   });
 
   it('resets filters with clearFilters()', () => {

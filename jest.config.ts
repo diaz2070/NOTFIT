@@ -15,6 +15,7 @@ const config: Config = {
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts',
+    '!src/types/**',
     '!src/db/**', // Exclude database files since they are not part of the app logic
     '!src/components/ui/**', // Exclude UI components since they are shadcn components
     '!src/lib/**', // Exclude library files since its shadcn components

@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import Header from '@/components/Header';
 
-// Mock de subcomponentes
 jest.mock('@/components/Navigation/MobileNavigation', () => {
   return function MockMobileNavigation() {
     return <div data-testid="mobile-nav">MobileNavigation</div>;
@@ -14,7 +13,6 @@ jest.mock('@/components/Navigation/DesktopNavigation', () => {
   };
 });
 
-// Mock de getUser
 jest.mock('@/auth/server', () => ({
   getUser: jest.fn().mockResolvedValue({
     id: 'user-1',

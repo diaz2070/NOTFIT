@@ -28,14 +28,14 @@ function SelectRoutine({
       <CardHeader>
         <CardTitle>Selecciona una Rutina</CardTitle>
         <CardDescription>
-          Elige la rutina que vas a realizar hoy
+          Select today&aposs routine from the list below.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           <Select onValueChange={handleRoutineSelect}>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Selecciona una rutina" />
+            <SelectTrigger className="w-full" data-testid="select-trigger">
+              <SelectValue placeholder="Select a routine" />
             </SelectTrigger>
             <SelectContent>
               {availableRoutines.map((routine) => (

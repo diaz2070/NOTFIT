@@ -16,7 +16,7 @@ import handleError from '@/utils/handle';
 type SignUpSchemaType = z.infer<typeof signUpSchema>;
 type SignInSchemaType = z.infer<typeof signInSchema>;
 
-// Mock dependencies
+
 jest.mock('@/auth/server', () => ({
   createClient: jest.fn(),
 }));
@@ -31,7 +31,6 @@ jest.mock('@/db/prisma', () => ({
 
 jest.mock('@/utils/handle');
 
-// Type the mock functions properly
 const mockedCreateClient = jest.mocked(createClient);
 const mockedHandleError = jest.mocked(handleError);
 const mockedPrisma = prisma as unknown as {
@@ -49,7 +48,7 @@ describe('signUpAction', () => {
   };
 
   beforeEach(() => {
-    // Reset mocks before each test
+
     jest.clearAllMocks();
   });
 
@@ -70,10 +69,10 @@ describe('signUpAction', () => {
 
     mockedCreateClient.mockResolvedValue({
       auth: mockAuth,
-      // Add minimal required properties to satisfy the type
+
       supabaseUrl: 'http://example.com',
       supabaseKey: 'fake-key',
-      // Other required properties...
+
     } as unknown as SupabaseClient);
 
     mockedHandleError.mockReturnValue({
@@ -97,10 +96,10 @@ describe('signUpAction', () => {
 
     mockedCreateClient.mockResolvedValue({
       auth: mockAuth,
-      // Add minimal required properties to satisfy the type
+ 
       supabaseUrl: 'http://example.com',
       supabaseKey: 'fake-key',
-      // Other required properties...
+
     } as unknown as SupabaseClient);
 
     mockedHandleError.mockReturnValue({
@@ -123,10 +122,9 @@ describe('signUpAction', () => {
 
     mockedCreateClient.mockResolvedValue({
       auth: mockAuth,
-      // Add minimal required properties to satisfy the type
+     
       supabaseUrl: 'http://example.com',
       supabaseKey: 'fake-key',
-      // Other required properties...
     } as unknown as SupabaseClient);
 
     mockedPrisma.user.create.mockRejectedValue(new Error('DB error'));
@@ -151,10 +149,9 @@ describe('signUpAction', () => {
 
     mockedCreateClient.mockResolvedValue({
       auth: mockAuth,
-      // Add minimal required properties to satisfy the type
       supabaseUrl: 'http://example.com',
       supabaseKey: 'fake-key',
-      // Other required properties...
+    
     } as unknown as SupabaseClient);
 
     mockedPrisma.user.create.mockResolvedValue({
