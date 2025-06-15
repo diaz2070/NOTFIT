@@ -5,7 +5,10 @@ import { prisma } from '@/db/prisma';
 import handleError from '@/utils/handle';
 import { signUpSchema, signInSchema } from '@/utils/validators/authSchema';
 import { changePasswordSchema } from '@/utils/validators/changePasswordSchema';
-import { UserInfoFields, userInfoSchema } from '@/utils/validators/userInfoSchema';
+import {
+  UserInfoFields,
+  userInfoSchema,
+} from '@/utils/validators/userInfoSchema';
 import { z } from 'zod';
 
 type SignUpResult = {

@@ -4,7 +4,6 @@ import ProfileInformation from './ProfileInformation';
 
 export default async function UserInformationWrapper() {
   const user = await getUser();
-  console.log('User Information:', user);
   return (
     <>
       <ProfileInformation
