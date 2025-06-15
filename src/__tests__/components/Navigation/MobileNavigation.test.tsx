@@ -39,7 +39,7 @@ describe('<MobileNavigation />', () => {
     render(<MobileNavigation user={mockUser} />);
     const menuButton = screen.getByRole('button');
 
-    fireEvent.click(menuButton); 
+    fireEvent.click(menuButton);
 
     expect(screen.getByTestId('button-navigation')).toBeInTheDocument();
     expect(screen.getByTestId('dark-toggle')).toBeInTheDocument();

@@ -1,6 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
 import useWorkoutLogState from '@/hooks/useWorkoutLogState';
-import type { LoggedExercise } from '@/types/routine';
 
 describe('useWorkoutLogState', () => {
   it('initializes with default values', () => {

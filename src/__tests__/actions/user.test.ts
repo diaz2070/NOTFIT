@@ -16,7 +16,6 @@ import handleError from '@/utils/handle';
 type SignUpSchemaType = z.infer<typeof signUpSchema>;
 type SignInSchemaType = z.infer<typeof signInSchema>;
 
-
 jest.mock('@/auth/server', () => ({
   createClient: jest.fn(),
 }));
@@ -48,7 +47,6 @@ describe('signUpAction', () => {
   };
 
   beforeEach(() => {
-
     jest.clearAllMocks();
   });
 
@@ -72,7 +70,6 @@ describe('signUpAction', () => {
 
       supabaseUrl: 'http://example.com',
       supabaseKey: 'fake-key',
-
     } as unknown as SupabaseClient);
 
     mockedHandleError.mockReturnValue({
@@ -96,10 +93,9 @@ describe('signUpAction', () => {
 
     mockedCreateClient.mockResolvedValue({
       auth: mockAuth,
- 
+
       supabaseUrl: 'http://example.com',
       supabaseKey: 'fake-key',
-
     } as unknown as SupabaseClient);
 
     mockedHandleError.mockReturnValue({
@@ -122,7 +118,7 @@ describe('signUpAction', () => {
 
     mockedCreateClient.mockResolvedValue({
       auth: mockAuth,
-     
+
       supabaseUrl: 'http://example.com',
       supabaseKey: 'fake-key',
     } as unknown as SupabaseClient);
@@ -151,7 +147,6 @@ describe('signUpAction', () => {
       auth: mockAuth,
       supabaseUrl: 'http://example.com',
       supabaseKey: 'fake-key',
-    
     } as unknown as SupabaseClient);
 
     mockedPrisma.user.create.mockResolvedValue({
