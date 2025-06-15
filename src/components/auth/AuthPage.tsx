@@ -18,7 +18,7 @@ function AuthPage({
   type = 'sign-in',
 }: AuthPageProps) {
   return (
-    <div className="mt-8 sm:mt-15 flex flex-1 flex-col items-center">
+    <div className="mt-8 sm:mt-15 px-4 pb-9 xl:px-8 flex flex-1 flex-col items-center">
       <Card className="w-full max-w-md">
         <CardHeader className="mb-4 text-center">
           <CardTitle className="text-2xl sm:text-3xl font-[family-name:var(--font-lemon)]">
