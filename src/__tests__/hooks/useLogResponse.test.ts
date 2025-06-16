@@ -3,7 +3,6 @@ import useLogResponse from '@/hooks/useLogAPIResponse';
 import { toast } from 'sonner';
 import type { ApiResponse } from '@/actions/workoutLog';
 
-// Mock de toast de 'sonner'
 jest.mock('sonner', () => ({
   toast: {
     success: jest.fn(),

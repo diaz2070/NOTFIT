@@ -26,7 +26,7 @@ describe('WorkoutHistory', () => {
     );
     render(<HistoryPage />);
     await waitFor(() =>
-      expect(screen.getByText(/Load failed/i)).toBeInTheDocument(),
+      expect(screen.getByText(/Error while loading/i)).toBeInTheDocument(),
     );
   });
 
@@ -37,18 +37,18 @@ describe('WorkoutHistory', () => {
         date: '2024-01-01',
         routine: 'Legs',
         duration: '50 min',
-        exercises: [
-          { name: 'Squat', reps: 10, sets: '1', weight: '80kg' },
-          { name: 'Squat', reps: 10, sets: '2', weight: '80kg' },
-        ],
+        exercises: [{ name: 'Squat', reps: 10, sets: 2, weight: '80lbs' }],
         notes: 'Felt strong',
       },
     ];
     (getWorkoutHistory as jest.Mock).mockResolvedValue(mockData);
     render(<HistoryPage />);
     await screen.findByText('Legs');
-    expect(screen.getByText('2x10')).toBeInTheDocument();
-    expect(screen.getByText('80kg')).toBeInTheDocument();
+    expect(
+      screen.getByText((content) => content.includes('2x10')),
+    ).toBeInTheDocument();
+    expect(screen.getByText('Set 2x10')).toBeInTheDocument();
+    expect(screen.getByText('80lbs')).toBeInTheDocument();
     expect(screen.getByText(/Felt strong/i)).toBeInTheDocument();
   });
 

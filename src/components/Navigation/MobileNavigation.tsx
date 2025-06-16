@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Dumbbell, Menu } from 'lucide-react';
 
 import { User } from '@supabase/supabase-js';
@@ -10,6 +10,7 @@ import {
   SheetTrigger,
   SheetTitle,
 } from '@/components/ui/sheet';
+import { usePathname } from 'next/navigation';
 import { Button } from '../ui/button';
 import DarkModeToggle from './DarkModeToggle';
 import ButtonNavigation from './ButtonNavigation';
@@ -24,6 +25,12 @@ export default function MobileNavigation({
   user,
 }: Readonly<DesktopNavigationProps>) {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild className="md:hidden">

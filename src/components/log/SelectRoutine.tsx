@@ -28,7 +28,7 @@ function SelectRoutine({
       <CardHeader>
         <CardTitle>Selecciona una Rutina</CardTitle>
         <CardDescription>
-          Select today&aposs routine from the list below.
+          Select today&apos;s routine from the list below.
         </CardDescription>
       </CardHeader>
       <CardContent>

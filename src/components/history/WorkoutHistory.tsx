@@ -25,6 +25,8 @@ import {
   TrendingUp,
   Filter,
   Search,
+  Loader2,
+  CircleX,
 } from 'lucide-react';
 import getWorkoutHistory from '@/actions/workoutHistory';
 import { Workout, GroupedExercise } from '@/types/workout';
@@ -104,7 +106,8 @@ export default function HistoryPage() {
 
   if (loading) {
     return (
-      <div className="p-8 text-center text-muted-foreground">
+      <div className="p-8 text-center text-muted-foreground min-h-[90dvh] flex flex-col items-center justify-center">
+        <Loader2 className="animate-spin" />
         Loading history...
       </div>
     );
@@ -112,8 +115,10 @@ export default function HistoryPage() {
 
   if (error) {
     return (
-      <div className="p-8 text-center text-red-500">
-        Error while loading: {error.message}
+      <div className="min-h-[90dvh] flex flex-col items-center justify-center text-2xl p-8 text-center text-red-500 gap-2">
+        <CircleX className="h-12 w-12" />
+        <p>Error while loading</p>
+        <p>Try again later</p>
       </div>
     );
   }
@@ -281,7 +286,7 @@ export default function HistoryPage() {
                     <div>
                       <h4 className="font-medium mb-2">Exercises performed:</h4>
                       {(() => {
-                        const grouped = Object.values(
+                        Object.values(
                           workout.exercises.reduce<
                             Record<string, GroupedExercise>
                           >((acc, curr) => {
@@ -301,23 +306,26 @@ export default function HistoryPage() {
                         );
                         return (
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                            {grouped.map((exercise, index) => (
+                            {workout.exercises.map((exercise, index) => (
                               <div
                                 key={index}
                                 className="flex justify-between items-center p-2 bg-base-100 border border-base-300 rounded"
                               >
-                                <span className="text-sm">{exercise.name}</span>
+                                <span className="text-sm">
+                                  {exercise.name.charAt(0).toUpperCase() +
+                                    exercise.name.slice(1)}
+                                </span>
                                 <div className="flex gap-2">
                                   <Badge
                                     variant="outline"
-                                    className="bg-primary text-xs"
+                                    className="bg-primary text-white text-xs"
                                   >
-                                    {exercise.sets}x{exercise.reps}
+                                    Set {exercise.sets}x{exercise.reps}
                                   </Badge>
-                                  {exercise.weight !== '0kg' && (
+                                  {exercise.weight !== '0lbs' && (
                                     <Badge
                                       variant="outline"
-                                      className="text-xs bg-primary"
+                                      className="text-xs text-white bg-primary"
                                     >
                                       {exercise.weight}
                                     </Badge>

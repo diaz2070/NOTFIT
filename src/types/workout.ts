@@ -7,11 +7,11 @@ export type Exercise = {
 
 export type Workout = {
   id: string;
-  date: string;
+  date: string | Date;
   routine: string;
   duration?: string;
   exercises: Exercise[];
-  notes?: string;
+  notes: string | null;
 };
 
 export type GroupedExercise = {
