@@ -18,14 +18,6 @@ import {
 
 import Link from 'next/link';
 import useRoutines from '@/hooks/useRoutines';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationPrevious,
-  PaginationNext,
-} from '@/components/ui/pagination';
 
 import DeleteRoutineModal from '@/components/routines/[id]/delete/DeleteRoutineModal';
 import useDeleteRoutine from '@/hooks/useDeleteRoutine';

@@ -43,7 +43,6 @@ export default function HistoryPage() {
     async function load() {
       try {
         const res = await getWorkoutHistory();
-        console.log('Workout history loaded:', res);
         setWorkoutHistory(res);
       } catch (e) {
         if (e instanceof Error) {
@@ -287,7 +286,7 @@ export default function HistoryPage() {
                     <div>
                       <h4 className="font-medium mb-2">Exercises performed:</h4>
                       {(() => {
-                        const grouped = Object.values(
+                        Object.values(
                           workout.exercises.reduce<
                             Record<string, GroupedExercise>
                           >((acc, curr) => {

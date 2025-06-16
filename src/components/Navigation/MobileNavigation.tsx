@@ -10,12 +10,12 @@ import {
   SheetTrigger,
   SheetTitle,
 } from '@/components/ui/sheet';
+import { usePathname } from 'next/navigation';
 import { Button } from '../ui/button';
 import DarkModeToggle from './DarkModeToggle';
 import ButtonNavigation from './ButtonNavigation';
 import LogoutButton from './LogoutButton';
 import UserNavigationButtons from './UserNavigationButtons';
-import { usePathname } from 'next/navigation';
 
 interface DesktopNavigationProps {
   user: User | null;
