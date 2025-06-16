@@ -1,3 +1,5 @@
+'use client';
+
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { toast } from 'sonner';
@@ -21,6 +23,8 @@ import {
   saveWorkoutLog,
   type ApiResponse,
 } from '@/actions/workoutLog';
+
+import editWorkoutLog from '@/actions/editWorkoutLog';
 
 export default function useWorkoutLog(
   routines: RoutineWithExercises[],
@@ -173,6 +177,24 @@ export default function useWorkoutLog(
       }
 
       Cookies.remove('activeWorkoutLogId');
+
+      if (restoredLog?.data) {
+        await editWorkoutLog(restoredLog.data.id, {
+          notes: generalNotes,
+          entries: workoutData.flatMap((ex) =>
+            ex.completedSets.map((set) => ({
+              id: set.entryId,
+              reps: set.reps,
+              weight: set.weight,
+              completed: set.completed,
+            })),
+          ),
+        });
+
+        router.push('/history');
+        return;
+      }
+
       const formData = new FormData();
       const endTime = new Date();
 
@@ -228,7 +250,7 @@ export default function useWorkoutLog(
     availableRoutines: routines.map((r) => ({
       id: r.id,
       name: r.name,
-      days: r.daysOfWeek, // esto debe ser parte del modelo RoutineWithExercises
+      days: r.daysOfWeek,
     })),
     handleRoutineSelect,
   };

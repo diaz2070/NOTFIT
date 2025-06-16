@@ -25,6 +25,7 @@ export default function transformWorkoutLogToExercises(
         reps: entry.reps,
         weight: entry.weight,
         completed: entry.completed,
+        entryId: entry.id,
       });
 
       return acc;

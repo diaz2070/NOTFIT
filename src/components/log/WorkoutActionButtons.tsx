@@ -7,8 +7,9 @@ interface WorkoutActionButtonsProps {
   isSaving: boolean;
   isDeleting: boolean;
   isDiscarding: boolean;
-  onChangeRoutine: () => void;
+  onChangeRoutine?: () => void;
   onDiscard: () => void;
+  discardLabel?: string;
 }
 
 function WorkoutActionButtons({
@@ -18,6 +19,7 @@ function WorkoutActionButtons({
   isDiscarding,
   onChangeRoutine,
   onDiscard,
+  discardLabel,
 }: Readonly<WorkoutActionButtonsProps>) {
   return (
     <div className="flex gap-4 items-center justify-between flex-wrap-reverse">
@@ -30,16 +32,18 @@ function WorkoutActionButtons({
         Finish Workout
       </Button>
       <div className="flex-1 flex gap-4 ">
-        <Button
-          type="button"
-          variant="outline"
-          className="flex-1"
-          onClick={onChangeRoutine}
-          disabled={isBusy}
-        >
-          {isDiscarding && <Spinner size={16} />}
-          Change Routine
-        </Button>
+        {onChangeRoutine && (
+          <Button
+            type="button"
+            variant="outline"
+            className="flex-1"
+            onClick={onChangeRoutine}
+            disabled={isBusy}
+          >
+            {isDiscarding && <Spinner size={16} />}
+            Change Routine
+          </Button>
+        )}
         <Button
           type="button"
           variant="destructive"
@@ -48,7 +52,7 @@ function WorkoutActionButtons({
           disabled={isBusy}
         >
           {isDeleting && <Spinner size={16} />}
-          Discard
+          {discardLabel ?? 'Discard'}
         </Button>
       </div>
     </div>

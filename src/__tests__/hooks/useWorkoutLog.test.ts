@@ -22,6 +22,11 @@ jest.mock('@/utils/validators/workout', () => ({
   default: jest.fn(),
 }));
 
+jest.mock('@/actions/editWorkoutLog', () => ({
+  __esModule: true,
+  default: jest.fn(),
+}));
+
 let mockWorkoutStatus = 'IN_PROGRESS';
 const mockPause = jest.fn();
 const mockResume = jest.fn();
@@ -160,13 +165,8 @@ describe('useWorkoutLog full test', () => {
   it('submits valid workout and navigates on success', async () => {
     mockSave.mockResolvedValue({ status: 200 });
 
-    const { result } = renderHook(() =>
-      useWorkoutLog(mockRoutines, {
-        status: 200,
-        errorMessage: '',
-        data: null,
-      }),
-    );
+    const { result } = renderHook(() => useWorkoutLog(mockRoutines, null));
+
     await act(async () => {
       await result.current.handlers.handleSubmitLog({
         preventDefault: () => {},

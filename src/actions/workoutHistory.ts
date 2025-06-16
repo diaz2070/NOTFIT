@@ -1,11 +1,8 @@
-// src/actions/getWorkoutHistory.ts
-
 'use server';
 
 import { prisma } from '@/db/prisma';
 import { getUser } from '@/auth/server';
 
-// Después
 async function getWorkoutHistory() {
   const user = await getUser();
   if (!user) return [];
@@ -15,7 +12,10 @@ async function getWorkoutHistory() {
     orderBy: { date: 'desc' },
     include: {
       routine: true,
-      entries: { include: { exercise: true } },
+      entries: {
+        where: { completed: true },
+        include: { exercise: true },
+      },
     },
   });
 
