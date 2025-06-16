@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useTransition } from 'react';
-import getRoutinesAction, { RoutineWithExercises } from '@/actions/routines';
+import { getRoutinesAction, RoutineWithExercises } from '@/actions/routines';
 
 import { toast } from 'sonner';
 
