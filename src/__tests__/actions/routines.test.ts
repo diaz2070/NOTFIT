@@ -14,6 +14,10 @@ jest.mock('@/db/prisma', () => ({
     routine: {
       findMany: jest.fn(),
       create: jest.fn(),
+      update: jest.fn(),
+    },
+    routineExercise: {
+      deleteMany: jest.fn(),
     },
   },
 }));
@@ -155,5 +159,40 @@ describe('createRoutineAction', () => {
     expect(result.status).toBe(500);
     expect(result.data).toBeNull();
     expect(result.errorMessage).toBe('Unexpected error');
+  });
+});
+
+describe('updateRoutineAction', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('returns 200 when update is successful', async () => {
+    (getUser as jest.Mock).mockResolvedValue({ id: 'user-123' });
+    (prisma.routineExercise.deleteMany as jest.Mock).mockResolvedValue({});
+    (prisma.routine.update as jest.Mock).mockResolvedValue({});
+
+    const { updateRoutineAction } = await import('@/actions/routines');
+    const result = await updateRoutineAction('1', validFormData);
+
+    expect(result.status).toBe(200);
+    expect(result.errorMessage).toBeNull();
+    expect(prisma.routineExercise.deleteMany).toHaveBeenCalledWith({
+      where: { routineId: '1' },
+    });
+    expect(prisma.routine.update).toHaveBeenCalled();
+  });
+
+  it('returns 500 when update throws error', async () => {
+    (getUser as jest.Mock).mockResolvedValue({ id: 'user-123' });
+    (prisma.routineExercise.deleteMany as jest.Mock).mockRejectedValue(
+      new Error('fail'),
+    );
+
+    const { updateRoutineAction } = await import('@/actions/routines');
+    const result = await updateRoutineAction('1', validFormData);
+
+    expect(result.status).toBe(500);
+    expect(result.errorMessage).toBe('Failed to update routine');
   });
 });
