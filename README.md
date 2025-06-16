@@ -73,4 +73,4 @@ The app will be available at `http://localhost:3000`.
 
 ## Authors
 
-This project was developed by students as part of the *Software Quality* course (CI-0140) at the University of Costa Rica.
+This project was developed by students as part of the _Software Quality_ course (CI-0140) at the University of Costa Rica.
