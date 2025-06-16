@@ -1,4 +1,4 @@
-import React from 'react';
+import { getUser } from '@/auth/server';
 import HistoryPage from '@/components/history/WorkoutHistory';
 
 export const metadata = {
@@ -6,6 +6,10 @@ export const metadata = {
   description: 'Check your workout history',
 };
 
-export default function HistoryRoutePage() {
-  return <HistoryPage />;
+export default async function HistoryRoutePage() {
+  const dbUser = await getUser();
+
+  if (!dbUser) return null;
+
+  return <HistoryPage userId={dbUser.id} />;
 }

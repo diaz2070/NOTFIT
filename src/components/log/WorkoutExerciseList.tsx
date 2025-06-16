@@ -112,7 +112,7 @@ export default function WorkoutExerciseList({
                       className="text-xs hidden md:flex items-center w-fit h-fit"
                     >
                       <Check className="h-3 w-3 mr-1" />
-                      Completada
+                      Completed
                     </Badge>
                   )}
                 </div>
