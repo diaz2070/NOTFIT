@@ -65,7 +65,7 @@ describe('SelectRoutine', () => {
 
     expect(screen.getByText('Selecciona una Rutina')).toBeInTheDocument();
     expect(
-      screen.getByText('Select today&aposs routine from the list below.'),
+      screen.getByText(`Select today's routine from the list below.`),
     ).toBeInTheDocument();
   });
 

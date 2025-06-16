@@ -29,6 +29,7 @@ import {
 
 import DeleteRoutineModal from '@/components/routines/[id]/delete/DeleteRoutineModal';
 import useDeleteRoutine from '@/hooks/useDeleteRoutine';
+import PaginationControls from '../Exercise/Pagination';
 
 type RoutineWithExercises = Routine & {
   exercises: (RoutineExercise & {
@@ -201,37 +202,14 @@ export default function RoutinesPage({ userId }: { userId: string }) {
           ))}
         </div>
 
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
-                href="#"
-                onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-              />
-            </PaginationItem>
-
-            {Array.from({ length: totalPages }, (_, i) => (
-              <PaginationItem key={i}>
-                <PaginationLink
-                  href="#"
-                  isActive={i + 1 === currentPage}
-                  onClick={() => setCurrentPage(i + 1)}
-                >
-                  {i + 1}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-
-            <PaginationItem>
-              <PaginationNext
-                href="#"
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(totalPages, prev + 1))
-                }
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        <PaginationControls
+          page={currentPage}
+          totalPages={totalPages}
+          nextPage={() =>
+            setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+          }
+          prevPage={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+        />
       </div>
     );
   }

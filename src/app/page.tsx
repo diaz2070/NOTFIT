@@ -78,7 +78,7 @@ export default function Home() {
             />
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 font-[family-name:var(--font-lemon)]">
               Track Your Fitness Journey Like{' '}
-              <span className="text-primary dark:text-indigo-400">
+              <span className="text-primary dark:text-[#6d19eb]">
                 Never Before
               </span>
             </h1>
@@ -125,7 +125,7 @@ export default function Home() {
               >
                 <CardHeader>
                   <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center mb-4">
-                    <feature.icon className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
+                    <feature.icon className="h-6 w-6 text-indigo-900 dark:text-indigo-400" />
                   </div>
                   <CardTitle className="text-gray-900 dark:text-white">
                     {feature.title}

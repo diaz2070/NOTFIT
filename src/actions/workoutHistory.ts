@@ -31,7 +31,7 @@ async function getWorkoutHistory() {
       name: entry.exercise.name,
       reps: entry.reps,
       sets: `${entry.setNumber}`,
-      weight: `${entry.weight}kg`,
+      weight: `${entry.weight}lbs`,
     })),
     notes: log.comment,
   }));

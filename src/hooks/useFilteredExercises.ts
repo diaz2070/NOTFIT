@@ -16,7 +16,7 @@ export default function useFilteredExercises(open: boolean) {
       category: 'all',
       muscle: 'all',
       sort: 'name',
-      take: 10,
+      take: 6,
       page: 1,
     }),
   );
