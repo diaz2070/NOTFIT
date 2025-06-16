@@ -52,7 +52,7 @@ describe('<RoutinesPage />', () => {
     jest.spyOn(useRoutinesHook, 'default').mockReturnValue({
       routines: [],
       isPending: true,
-      setRoutines: jest.fn(), // Add missing setRoutines
+      setRoutines: jest.fn(),
     });
     render(<RoutinesPage userId="u1" />);
     expect(screen.getByText(/loading routines/i)).toBeInTheDocument();
@@ -62,7 +62,7 @@ describe('<RoutinesPage />', () => {
     jest.spyOn(useRoutinesHook, 'default').mockReturnValue({
       routines: [],
       isPending: false,
-      setRoutines: jest.fn(), // Add missing setRoutines
+      setRoutines: jest.fn(),
     });
     render(<RoutinesPage userId="u1" />);
     expect(screen.getByText(/you have no routines yet/i)).toBeInTheDocument();
@@ -72,7 +72,7 @@ describe('<RoutinesPage />', () => {
     jest.spyOn(useRoutinesHook, 'default').mockReturnValue({
       routines: mockRoutines,
       isPending: false,
-      setRoutines: jest.fn(), // Add missing setRoutines
+      setRoutines: jest.fn(),
     });
     render(<RoutinesPage userId="u1" />);
     fireEvent.change(screen.getByPlaceholderText(/search by name/i), {
@@ -88,7 +88,7 @@ describe('<RoutinesPage />', () => {
     jest.spyOn(useRoutinesHook, 'default').mockReturnValue({
       routines: mockRoutines,
       isPending: false,
-      setRoutines: jest.fn(), // Add missing setRoutines
+      setRoutines: jest.fn(),
     });
 
     render(<RoutinesPage userId="u1" />);
@@ -118,7 +118,7 @@ describe('<RoutinesPage />', () => {
     jest.spyOn(useRoutinesHook, 'default').mockReturnValue({
       routines: manyRoutines,
       isPending: false,
-      setRoutines: jest.fn(), // Add missing setRoutines
+      setRoutines: jest.fn(),
     });
 
     render(<RoutinesPage userId="u1" />);
@@ -141,7 +141,7 @@ describe('<RoutinesPage />', () => {
     jest.spyOn(useRoutinesHook, 'default').mockReturnValue({
       routines: manyRoutines,
       isPending: false,
-      setRoutines: jest.fn(), // Add missing setRoutines
+      setRoutines: jest.fn(),
     });
 
     render(<RoutinesPage userId="u1" />);
@@ -161,7 +161,7 @@ describe('<RoutinesPage />', () => {
     });
 
     render(<RoutinesPage userId="u1" />);
-    fireEvent.click(screen.getAllByRole('button', { name: '' })[1]); // Trash
+    fireEvent.click(screen.getAllByRole('button', { name: '' })[1]);
 
     const cancelBtn = screen.getByText('Cancel');
     fireEvent.click(cancelBtn);
