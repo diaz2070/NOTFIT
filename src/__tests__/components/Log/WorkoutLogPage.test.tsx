@@ -9,9 +9,11 @@ jest.mock('@/actions/editWorkoutLog', () => ({
   editWorkoutLog: jest.fn(),
 }));
 
+const mockPush = jest.fn();
+
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
-    push: jest.fn(),
+    push: mockPush,
     replace: jest.fn(),
     refresh: jest.fn(),
   }),
@@ -121,5 +123,23 @@ describe('WorkoutLogPage', () => {
     expect(screen.getByText('NotesCard')).toBeInTheDocument();
     expect(screen.getByText('ActionButtons')).toBeInTheDocument();
     expect(screen.getByText('PausedWarning')).toBeInTheDocument();
+  });
+
+  it('navigates to /routines on Back button when not in edit mode', () => {
+    (useWorkoutLog as jest.Mock).mockReturnValue({
+      workoutState: {
+        selectedRoutine: '',
+      },
+      controller: {},
+      handlers: {},
+      availableRoutines: routines,
+      handleRoutineSelect: jest.fn(),
+      isBusy: false,
+    });
+
+    render(<WorkoutLogPage routines={routines} />);
+    screen.getByText(/Back to Routines/i).click();
+
+    expect(mockPush).toHaveBeenCalledWith('/routines');
   });
 });
