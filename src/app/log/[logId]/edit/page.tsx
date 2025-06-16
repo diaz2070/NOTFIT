@@ -2,21 +2,25 @@ import { getUser } from '@/auth/server';
 import getWorkoutLogById from '@/actions/getWorkoutById';
 import { notFound } from 'next/navigation';
 import WorkoutLogPage from '@/components/log/WorkoutLogPage';
+import { WorkoutLogWithEntries } from '@/types/routine';
+import { ApiResponse } from '@/actions/workoutLog';
 
 export default async function EditWorkoutLogPage({
   params,
-}: {
-  params: { logId: string };
-}) {
+}: Readonly<{
+  params: Promise<{ logId: string }>;
+}>) {
+  const { logId } = await params;
   const user = await getUser();
-  const log = await getWorkoutLogById(params.logId);
+  const log = await getWorkoutLogById(logId);
 
   if (!log || log.userId !== user?.id) return notFound();
 
-  return (
-    <WorkoutLogPage
-      routines={[log.routine]}
-      restoredLog={{ ok: true, data: log }}
-    />
-  );
+  const apiResponse: ApiResponse<WorkoutLogWithEntries> = {
+    status: 200,
+    errorMessage: '',
+    data: log,
+  };
+
+  return <WorkoutLogPage routines={[log.routine]} restoredLog={apiResponse} />;
 }

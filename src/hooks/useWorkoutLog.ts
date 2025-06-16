@@ -182,12 +182,14 @@ export default function useWorkoutLog(
         await editWorkoutLog(restoredLog.data.id, {
           notes: generalNotes,
           entries: workoutData.flatMap((ex) =>
-            ex.completedSets.map((set) => ({
-              id: set.entryId,
-              reps: set.reps,
-              weight: set.weight,
-              completed: set.completed,
-            })),
+            ex.completedSets
+              .filter((set) => set.entryId !== undefined)
+              .map((set) => ({
+                id: set.entryId!,
+                reps: set.reps,
+                weight: set.weight,
+                completed: set.completed,
+              })),
           ),
         });
 
@@ -213,7 +215,7 @@ export default function useWorkoutLog(
       const result = await saveWorkout(null, formData);
 
       if (result.status === 200) {
-        router.push('/');
+        router.push('/history');
       } else {
         toast.error(
           `Failed to save log: ${result.errorMessage ?? 'Unknown error'}`,

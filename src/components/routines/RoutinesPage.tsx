@@ -4,7 +4,15 @@ import { Routine, RoutineExercise, Exercise, DayOfWeek } from '@prisma/client';
 import { useState, useMemo } from 'react';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Calendar, Plus, Edit, Trash2, Target, Search } from 'lucide-react';
+import {
+  Calendar,
+  Plus,
+  Edit,
+  Trash2,
+  Target,
+  Search,
+  Loader2,
+} from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -106,7 +114,12 @@ export default function RoutinesPage({ userId }: { userId: string }) {
 
   let content;
   if (isPending) {
-    content = <p className="text-center">Loading routines...</p>;
+    content = (
+      <div className="p-8 text-center text-muted-foreground min-h-[50dvh] flex flex-col items-center justify-center">
+        <Loader2 className="animate-spin" />
+        Loading history...
+      </div>
+    );
   } else if (filteredAndSortedRoutines.length === 0) {
     content = (
       <Card className="text-center py-12">
@@ -176,18 +189,8 @@ export default function RoutinesPage({ userId }: { userId: string }) {
                     </span>
                   </div>
                   <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1"
-                      asChild
-                    >
-                      <Link href={`/routines/${routine.id}`}>View Details</Link>
-                    </Button>
                     <Button size="sm" className="flex-1 text-white" asChild>
-                      <Link href={`/workout/log?routine=${routine.id}`}>
-                        Use Routine
-                      </Link>
+                      <Link href="/log">Log a Workout</Link>
                     </Button>
                   </div>
                 </div>

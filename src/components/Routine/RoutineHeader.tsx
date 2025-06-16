@@ -4,7 +4,15 @@ import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
-export default function RoutineHeader() {
+interface RoutineHeaderProps {
+  title: string;
+  subtitle: string;
+}
+
+export default function RoutineHeader({
+  title,
+  subtitle,
+}: Readonly<RoutineHeaderProps>) {
   return (
     <div className="mb-8">
       <Button variant="ghost" asChild className="mb-4">
@@ -14,11 +22,9 @@ export default function RoutineHeader() {
         </Link>
       </Button>
       <h1 className="text-3xl font-bold text-foreground mb-2 font-[family-name:var(--font-lemon)]">
-        New Routine Details
+        {title}
       </h1>
-      <p className="text-muted-foreground">
-        Create a new custom workout routine
-      </p>
+      <p className="text-muted-foreground">{subtitle}</p>
     </div>
   );
 }

@@ -56,7 +56,10 @@ export default function NewRoutinePage() {
   return (
     <div className="min-h-screen bg-background">
       <main className="container mx-auto px-4 py-8">
-        <RoutineHeader />
+        <RoutineHeader
+          title="New Routine Details"
+          subtitle="Create a new custom workout routine"
+        />
 
         <Form {...form}>
           <form

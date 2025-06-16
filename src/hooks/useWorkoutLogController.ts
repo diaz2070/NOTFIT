@@ -1,4 +1,4 @@
-import { LoggedExercise } from '@/types/routine';
+import { CompletedSet, LoggedExercise } from '@/types/routine';
 
 interface WorkoutLogControllerProps {
   setWorkoutData: React.Dispatch<React.SetStateAction<LoggedExercise[]>>;
@@ -12,7 +12,7 @@ export default function useWorkoutLogController({
   const updateSet = (
     exerciseIndex: number,
     setIndex: number,
-    field: 'reps' | 'weight' | 'completed',
+    field: keyof CompletedSet,
     value: number | boolean,
   ) => {
     if (
