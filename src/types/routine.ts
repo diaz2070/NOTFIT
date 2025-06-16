@@ -49,3 +49,12 @@ export type WorkoutLogWithEntries = WorkoutLog & {
     };
   })[];
 };
+
+export type RoutineExerciseDraft = {
+  id: string; // temp ID, not persisted yet
+  name: string; // name of the exercise
+  sets: number;
+  reps: number;
+  weight: number; // corresponds to `targetWeight` in DB
+  notes: string; // corresponds to `note` in DB
+};

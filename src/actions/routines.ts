@@ -1,8 +1,13 @@
 'use server';
 
+import { getUser } from '@/auth/server';
 import { prisma } from '@/db/prisma';
 import handleError from '@/utils/handle';
-import { Routine, RoutineExercise, Exercise } from '@prisma/client';
+import {
+  RoutineFormFields,
+  routineSchema,
+} from '@/utils/validators/routineSchema';
+import { Routine, RoutineExercise, Exercise, DayOfWeek } from '@prisma/client';
 
 export type RoutineWithExercises = Routine & {
   exercises: (RoutineExercise & {
@@ -16,7 +21,7 @@ type GetRoutinesResult = {
   errorMessage: string | null;
 };
 
-const getRoutinesAction = async (
+export const getRoutinesAction = async (
   userId: string,
 ): Promise<GetRoutinesResult> => {
   try {
@@ -50,4 +55,70 @@ const getRoutinesAction = async (
   }
 };
 
-export default getRoutinesAction;
+export async function createRoutineAction(
+  formData: RoutineFormFields,
+): Promise<{
+  status: number;
+  errorMessage: string | null;
+  data: { id: string } | null;
+}> {
+  const validation = routineSchema.safeParse(formData);
+  if (!validation.success) {
+    return {
+      status: 400,
+      errorMessage: validation.error.errors
+        .map(
+          (
+            e:
+              | { message: string; path: string[] }
+              | { message: string; code: string },
+          ) => e.message,
+        )
+        .join(', '),
+      data: null,
+    };
+  }
+
+  const user = await getUser();
+  if (!user)
+    return {
+      status: 401,
+      errorMessage: 'Unauthorized',
+      data: null,
+    };
+
+  try {
+    const parsedDays = formData.selectedDays.filter((day): day is DayOfWeek =>
+      Object.values(DayOfWeek).includes(day as DayOfWeek),
+    );
+    const routine = await prisma.routine.create({
+      data: {
+        userId: user.id,
+        name: formData.routineName,
+        daysOfWeek: parsedDays,
+        exercises: {
+          create: formData.exercises.map((ex, index) => ({
+            exerciseId: ex.id,
+            sets: ex.sets,
+            reps: ex.reps,
+            targetWeight: ex.weight,
+            note: ex.notes,
+            order: index,
+          })),
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    return {
+      status: 200,
+      errorMessage: null,
+      data: routine,
+    };
+  } catch (error) {
+    const result = handleError(error);
+    return { ...result, data: null };
+  }
+}

@@ -107,7 +107,9 @@ export default function RoutinesPage({ userId }: { userId: string }) {
     };
 
   const emptyMessage =
-    routines.length === 0 ? 'You have no routines yet' : 'No routines found';
+    routines.length === 0
+      ? "You don't have any routines yet"
+      : 'No routines found';
 
   let content;
   if (isPending) {
