@@ -8,7 +8,12 @@ import '@testing-library/jest-dom';
 
 describe('<RoutineHeader />', () => {
   it('renders the back button with icon and label', () => {
-    const { container } = render(<RoutineHeader />);
+    const { container } = render(
+      <RoutineHeader
+        title="New Routine Details"
+        subtitle="Create a new custom workout routine"
+      />,
+    );
     const link = screen.getByRole('link', { name: /back to routines/i });
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute('href', '/routines');
@@ -18,7 +23,12 @@ describe('<RoutineHeader />', () => {
   });
 
   it('renders the title and subtitle correctly', () => {
-    render(<RoutineHeader />);
+    render(
+      <RoutineHeader
+        title="New Routine Details"
+        subtitle="Create a new custom workout routine"
+      />,
+    );
     expect(
       screen.getByRole('heading', { name: /new routine details/i }),
     ).toBeInTheDocument();

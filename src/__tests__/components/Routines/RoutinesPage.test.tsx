@@ -55,7 +55,7 @@ describe('<RoutinesPage />', () => {
       setRoutines: jest.fn(),
     });
     render(<RoutinesPage userId="u1" />);
-    expect(screen.getByText(/loading routines/i)).toBeInTheDocument();
+    expect(screen.getByText(/loading routines.../i)).toBeInTheDocument();
   });
 
   it('shows empty message when no routines', () => {

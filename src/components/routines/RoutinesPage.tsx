@@ -117,7 +117,7 @@ export default function RoutinesPage({ userId }: { userId: string }) {
     content = (
       <div className="p-8 text-center text-muted-foreground min-h-[50dvh] flex flex-col items-center justify-center">
         <Loader2 className="animate-spin" />
-        Loading history...
+        Loading Routines...
       </div>
     );
   } else if (filteredAndSortedRoutines.length === 0) {
