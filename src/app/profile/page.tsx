@@ -8,7 +8,7 @@ export default async function ProfilePage() {
     <div className="min-h-screen bg-background">
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">
+          <h1 className="text-3xl font-bold text-foreground mb-2 font-[family-name:var(--font-lemon)]">
             My Profile
           </h1>
           <p className="text-muted-foreground">

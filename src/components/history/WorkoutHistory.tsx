@@ -27,17 +27,31 @@ import {
   Search,
   Loader2,
   CircleX,
+  Trash2,
 } from 'lucide-react';
 import getWorkoutHistory from '@/actions/workoutHistory';
 import { Workout, GroupedExercise } from '@/types/workout';
 
-export default function HistoryPage() {
+import useDeleteWorkoutLog from '@/hooks/useDeleteWorkoutLog';
+import DeleteWorkoutLogModal from './DeleteWorkoutLogModal';
+
+export default function HistoryPage({ userId }: { userId: string }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRoutine, setFilterRoutine] = useState('all');
   const [filterMonth, setFilterMonth] = useState('all');
   const [workoutHistory, setWorkoutHistory] = useState<Workout[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const [selectedWorkoutId, setSelectedWorkoutId] = useState<string | null>(
+    null,
+  );
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const { deleteWorkoutLog } = useDeleteWorkoutLog(() => {
+    setWorkoutHistory((prev) => prev.filter((w) => w.id !== selectedWorkoutId));
+    setModalOpen(false);
+    setSelectedWorkoutId(null);
+  });
 
   useEffect(() => {
     async function load() {
@@ -56,7 +70,7 @@ export default function HistoryPage() {
     }
     load();
   }, []);
-  //
+
   const routines = Array.from(new Set(workoutHistory.map((w) => w.routine)));
   const months = Array.from(
     new Set(
@@ -279,6 +293,17 @@ export default function HistoryPage() {
                         })}
                       </CardDescription>
                     </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedWorkoutId(workout.id);
+                        setModalOpen(true);
+                      }}
+                      aria-label="Delete workout"
+                      className="text-red-500 hover:text-red-600 transition"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -351,6 +376,14 @@ export default function HistoryPage() {
             ))
           )}
         </div>
+        <DeleteWorkoutLogModal
+          workoutId={selectedWorkoutId || ''}
+          isOpen={isModalOpen}
+          onCancel={() => setModalOpen(false)}
+          onConfirm={() => {
+            if (selectedWorkoutId) deleteWorkoutLog(selectedWorkoutId, userId);
+          }}
+        />
       </main>
     </div>
   );
