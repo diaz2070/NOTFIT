@@ -5,6 +5,18 @@ import useWorkoutLog from '@/hooks/useWorkoutLog';
 
 jest.mock('@/hooks/useWorkoutLog');
 
+jest.mock('@/actions/editWorkoutLog', () => ({
+  editWorkoutLog: jest.fn(),
+}));
+
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    refresh: jest.fn(),
+  }),
+}));
+
 jest.mock('@/components/log/WorkoutProgressBar', () => {
   return function MockProgressBar() {
     return <div>ProgressBar</div>;

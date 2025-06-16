@@ -131,8 +131,8 @@ describe('transformWorkoutLogToExercises', () => {
     expect(result[0].targetWeight).toBe(60);
     expect(result[0].order).toBe(1);
     expect(result[0].completedSets).toEqual([
-      { reps: 10, weight: 50, completed: true },
-      { reps: 8, weight: 55, completed: true },
+      { reps: 10, weight: 50, completed: true, entryId: 'entry1' },
+      { reps: 8, weight: 55, completed: true, entryId: 'entry2' },
     ]);
 
     expect(result[1].exerciseId).toBe('ex2');
@@ -142,7 +142,7 @@ describe('transformWorkoutLogToExercises', () => {
     expect(result[1].targetWeight).toBe(35);
     expect(result[1].order).toBe(2);
     expect(result[1].completedSets).toEqual([
-      { reps: 12, weight: 30, completed: false },
+      { reps: 12, weight: 30, completed: false, entryId: 'entry3' },
     ]);
   });
 });

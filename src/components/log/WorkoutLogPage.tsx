@@ -10,10 +10,10 @@ import useWorkoutLog from '@/hooks/useWorkoutLog';
 
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
-import { Card, CardHeader } from '../ui/card';
+import { Card, CardHeader } from '@/components/ui/card';
 
+import { useRouter } from 'next/navigation';
 import SelectRoutine from './SelectRoutine';
-
 import WorkoutExerciseList from './WorkoutExerciseList';
 import WorkoutProgressBar from './WorkoutProgressBar';
 import PausedWarningCard from './PausedWarningCard';
@@ -29,12 +29,14 @@ export default function WorkoutLogPage({
   routines,
   restoredLog = null,
 }: Readonly<LogWorkoutProps>) {
+  const router = useRouter();
+  const isEditMode = !!restoredLog?.data;
+
   const {
     workoutState,
     controller,
     handlers,
     isBusy,
-
     availableRoutines,
     handleRoutineSelect,
   } = useWorkoutLog(routines, restoredLog);
@@ -77,17 +79,21 @@ export default function WorkoutLogPage({
             variant="link"
             asChild
             className="mb-4"
-            onClick={handleChangeRoutine}
+            onClick={() => router.push(isEditMode ? '/history' : '/routines')}
           >
             <div className="flex items-center">
               <ArrowLeft className="h-4 w-4" />
-              <p> Back to Routines</p>
+              <p> Back to {isEditMode ? 'History' : 'Routines'}</p>
             </div>
           </Button>
           <h1 className="text-3xl font-bold text-foreground mb-2 font-[family-name:var(--font-lemon)]">
-            Log a New Workout
+            {isEditMode ? 'Edit Workout' : 'Log a New Workout'}
           </h1>
-          <p className="text-muted-foreground">Log all your session data</p>
+          <p className="text-muted-foreground">
+            {isEditMode
+              ? 'Modify the data of your past session'
+              : 'Log all your session data'}
+          </p>
         </div>
 
         {!selectedRoutine ? (
@@ -97,28 +103,32 @@ export default function WorkoutLogPage({
           />
         ) : (
           <form onSubmit={handleSubmitLog} className="space-y-6">
-            <Card>
-              <CardHeader>
-                <WorkoutProgressBar
-                  status={workoutStatus}
-                  startTime={startTime}
-                  totalCompletedSets={getTotalCompletedSets()}
-                  totalSets={getTotalSets()}
-                  pausedAt={pausedAt}
-                  onPause={handlePauseWorkout}
-                  onResume={handleResumeWorkout}
+            {!isEditMode && (
+              <>
+                <Card>
+                  <CardHeader>
+                    <WorkoutProgressBar
+                      status={workoutStatus}
+                      startTime={startTime}
+                      totalCompletedSets={getTotalCompletedSets()}
+                      totalSets={getTotalSets()}
+                      pausedAt={pausedAt}
+                      onPause={handlePauseWorkout}
+                      onResume={handleResumeWorkout}
+                      isPausing={isPausing}
+                      isResuming={isResuming}
+                    />
+                  </CardHeader>
+                </Card>
+
+                <PausedWarningCard
                   isPausing={isPausing}
                   isResuming={isResuming}
+                  pausedAt={pausedAt}
+                  visible={workoutStatus === 'PAUSED'}
                 />
-              </CardHeader>
-            </Card>
-
-            <PausedWarningCard
-              isPausing={isPausing}
-              isResuming={isResuming}
-              pausedAt={pausedAt}
-              visible={workoutStatus === 'PAUSED'}
-            />
+              </>
+            )}
 
             <WorkoutExerciseList
               exercises={workoutData}
@@ -137,8 +147,12 @@ export default function WorkoutLogPage({
               isSaving={isSaving}
               isDeleting={isDeleting}
               isDiscarding={isDiscardingRoutine}
-              onChangeRoutine={handleChangeRoutine}
-              onDiscard={handleDiscard}
+              onDiscard={() => {
+                if (isEditMode) router.push('/history');
+                else handleDiscard();
+              }}
+              {...(!isEditMode && { onChangeRoutine: handleChangeRoutine })}
+              discardLabel={isEditMode ? 'Cancel' : undefined}
             />
           </form>
         )}

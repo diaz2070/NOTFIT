@@ -15,6 +15,7 @@ export type CompletedSet = {
   reps: number;
   weight: number;
   completed: boolean;
+  entryId: string;
 };
 
 export type LoggedExercise = {

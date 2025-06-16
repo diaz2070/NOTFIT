@@ -28,10 +28,12 @@ import {
   Loader2,
   CircleX,
   Trash2,
+  Edit,
 } from 'lucide-react';
 import getWorkoutHistory from '@/actions/workoutHistory';
 import { Workout, GroupedExercise } from '@/types/workout';
 
+import Link from 'next/link';
 import useDeleteWorkoutLog from '@/hooks/useDeleteWorkoutLog';
 import DeleteWorkoutLogModal from './DeleteWorkoutLogModal';
 
@@ -293,17 +295,25 @@ export default function HistoryPage({ userId }: { userId: string }) {
                         })}
                       </CardDescription>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedWorkoutId(workout.id);
-                        setModalOpen(true);
-                      }}
-                      aria-label="Delete workout"
-                      className="text-red-500 hover:text-red-600 transition"
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
+                    <div className="flex gap-2 items-center">
+                      <Link
+                        href={`/log/${workout.id}/edit`}
+                        aria-label="Edit workout"
+                      >
+                        <Edit className="w-5 h-5 text-muted-foreground hover:text-blue-500 transition" />
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedWorkoutId(workout.id);
+                          setModalOpen(true);
+                        }}
+                        aria-label="Delete workout"
+                        className="text-red-500 hover:text-red-600 transition"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent>
