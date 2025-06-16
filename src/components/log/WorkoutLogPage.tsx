@@ -148,10 +148,17 @@ export default function WorkoutLogPage({
               isDeleting={isDeleting}
               isDiscarding={isDiscardingRoutine}
               onDiscard={() => {
-                if (isEditMode) router.push('/history');
-                else handleDiscard();
+                if (isEditMode) {
+                  router.push('/history');
+                } else {
+                  handleDiscard();
+                }
               }}
-              {...(!isEditMode && { onChangeRoutine: handleChangeRoutine })}
+              {...(!isEditMode && {
+                onChangeRoutine: () => {
+                  handleChangeRoutine();
+                },
+              })}
               discardLabel={isEditMode ? 'Cancel' : undefined}
             />
           </form>
