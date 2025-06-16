@@ -10,12 +10,14 @@ type Props = {
   form: UseFormReturn<RoutineFormFields>;
   isPending: boolean;
   hasExercises: boolean;
+  submitLabel?: string;
 };
 
 export default function RoutineActions({
   form,
   isPending,
   hasExercises,
+  submitLabel = 'Create Routine',
 }: Readonly<Props>) {
   const routineName = form.watch('routineName');
   const selectedDays = form.watch('selectedDays');
@@ -33,7 +35,7 @@ export default function RoutineActions({
         {isPending ? (
           <Loader2 data-testid="loader-icon" className="animate-spin" />
         ) : (
-          'Create Routine'
+          submitLabel
         )}
       </Button>
       <Button type="button" variant="outline" asChild>

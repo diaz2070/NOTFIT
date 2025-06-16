@@ -153,7 +153,7 @@ export default function RoutinesPage({ userId }: { userId: string }) {
                   </div>
                   <div className="flex gap-1">
                     <Button variant="ghost" size="icon" asChild>
-                      <Link href={`/routines/${routine.id}/edit`}>
+                      <Link href={`/routines/edit/${routine.id}`}>
                         <Edit className="h-4 w-4" />
                       </Link>
                     </Button>

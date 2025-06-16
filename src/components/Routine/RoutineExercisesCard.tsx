@@ -159,7 +159,7 @@ export default function RoutineExercisesCard({
                     <Label>Notes (optional)</Label>
                     <Textarea
                       placeholder="E.g.: Rest 90 seconds between sets"
-                      value={form.watch(`exercises.${index}.notes`)}
+                      value={form.watch(`exercises.${index}.notes`) ?? ''}
                       onChange={(e) =>
                         form.setValue(
                           `exercises.${index}.notes`,

@@ -101,8 +101,8 @@ export async function createRoutineAction(
             exerciseId: ex.id,
             sets: ex.sets,
             reps: ex.reps,
-            targetWeight: ex.weight,
-            note: ex.notes,
+            targetWeight: ex.weight ?? 0,
+            note: ex.notes ?? '',
             order: index,
           })),
         },
@@ -120,5 +120,85 @@ export async function createRoutineAction(
   } catch (error) {
     const result = handleError(error);
     return { ...result, data: null };
+  }
+}
+
+export async function getRoutineById(
+  id: string,
+): Promise<RoutineWithExercises | null> {
+  try {
+    const routine = await prisma.routine.findUnique({
+      where: { id },
+      include: {
+        exercises: {
+          include: {
+            exercise: true,
+          },
+        },
+      },
+    });
+
+    return routine;
+  } catch (error) {
+    return null;
+  }
+}
+
+export async function updateRoutineAction(
+  id: string,
+  formData: RoutineFormFields,
+): Promise<{ status: number; errorMessage: string | null }> {
+  const validation = routineSchema.safeParse(formData);
+  if (!validation.success) {
+    return {
+      status: 400,
+      errorMessage: validation.error.errors.map((e) => e.message).join(', '),
+    };
+  }
+
+  const user = await getUser();
+  if (!user) {
+    return {
+      status: 401,
+      errorMessage: 'Unauthorized',
+    };
+  }
+
+  try {
+    const parsedDays = formData.selectedDays.filter((day): day is DayOfWeek =>
+      Object.values(DayOfWeek).includes(day as DayOfWeek),
+    );
+
+    await prisma.routineExercise.deleteMany({
+      where: { routineId: id },
+    });
+
+    await prisma.routine.update({
+      where: { id },
+      data: {
+        name: formData.routineName,
+        daysOfWeek: parsedDays,
+        exercises: {
+          create: formData.exercises.map((ex, index) => ({
+            exerciseId: ex.id,
+            sets: ex.sets,
+            reps: ex.reps,
+            targetWeight: ex.weight,
+            note: ex.notes,
+            order: index,
+          })),
+        },
+      },
+    });
+
+    return {
+      status: 200,
+      errorMessage: null,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      errorMessage: 'Failed to update routine',
+    };
   }
 }
