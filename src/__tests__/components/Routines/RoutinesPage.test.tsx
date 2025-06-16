@@ -65,7 +65,9 @@ describe('<RoutinesPage />', () => {
       setRoutines: jest.fn(),
     });
     render(<RoutinesPage userId="u1" />);
-    expect(screen.getByText(/you have no routines yet/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/You don't have any routines yet/i),
+    ).toBeInTheDocument();
   });
 
   it('filters by search input', () => {
