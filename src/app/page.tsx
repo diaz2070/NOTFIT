@@ -67,7 +67,7 @@ export default function Home() {
               alt="Fitness Hero Image"
               width={600}
               height={400}
-              className="block dark:hidden w-50 h-auto sm:w-70 sm:h-auto md:w-100 md:h-auto object-fit"
+              className="hidden dark:block w-50 h-auto sm:w-70 sm:h-auto md:w-100 md:h-auto object-fit"
             />
             <Image
               src="/logo-light.svg"
