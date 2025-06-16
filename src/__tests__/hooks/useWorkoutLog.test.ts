@@ -165,9 +165,7 @@ describe('useWorkoutLog full test', () => {
   it('submits valid workout and navigates on success', async () => {
     mockSave.mockResolvedValue({ status: 200 });
 
-    const { result } = renderHook(() =>
-      useWorkoutLog(mockRoutines, null), // 👈 sin restoredLog
-    );
+    const { result } = renderHook(() => useWorkoutLog(mockRoutines, null));
 
     await act(async () => {
       await result.current.handlers.handleSubmitLog({

@@ -1,5 +1,3 @@
-// src/actions/editWorkoutLog.ts
-
 'use server';
 
 import { prisma } from '@/db/prisma';
