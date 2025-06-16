@@ -15,8 +15,12 @@ const config: Config = {
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts',
-    '!src/db/**',
-    '!src/lib/**',
+    '!src/types/**',
+    '!src/db/**', // Exclude database files since they are not part of the app logic
+    '!src/components/ui/**', // Exclude UI components since they are shadcn components
+    '!src/lib/**', // Exclude library files since its shadcn components
+    '!src/app/layout.tsx', // Exclude layout files
+    '!src/auth/**', // Exclude auth files since they are supabase specific
     '!**/node_modules/**',
   ],
   testMatch: ['**/__tests__/**/*.ts?(x)', '**/?(*.)+(spec|test).ts?(x)'],

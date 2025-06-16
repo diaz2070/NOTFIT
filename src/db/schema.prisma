@@ -19,6 +19,7 @@ enum DayOfWeek {
 
 enum WorkoutStatus {
   IN_PROGRESS
+  PAUSED
   COMPLETED
 }
 
@@ -59,9 +60,9 @@ enum MuscleTarget {
 
 model User {
   id          String       @id @default(uuid())
-  name        String
+  fullName    String
+  username    String       @unique 
   email       String       @unique
-  password    String
   routines    Routine[]
   workoutLogs WorkoutLog[]
   createdAt   DateTime     @default(now())
@@ -103,7 +104,7 @@ model RoutineExercise {
   exerciseId   String
   sets         Int
   reps         Int
-  targetWeight Float?
+  targetWeight Float
   restTime     Int?
   order        Int
   note         String?
