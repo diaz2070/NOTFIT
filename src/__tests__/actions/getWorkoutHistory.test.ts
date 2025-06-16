@@ -55,7 +55,7 @@ describe('getWorkoutHistory', () => {
             name: 'Bench Press',
             reps: 10,
             sets: '1',
-            weight: '80kg',
+            weight: '80lbs',
           },
         ],
         notes: 'Good session',

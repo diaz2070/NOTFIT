@@ -29,6 +29,7 @@ export default function PaginationControls({
             onClick={prevPage}
             disabled={page === 1}
             className="h-8 w-8 p-0"
+            aria-label="Previous Page"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -43,6 +44,7 @@ export default function PaginationControls({
             onClick={nextPage}
             disabled={page === totalPages}
             className="h-8 w-8 p-0"
+            aria-label="Next Page"
           >
             <ChevronRight className="h-4 w-4" />
           </Button>

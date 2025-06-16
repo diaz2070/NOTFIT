@@ -6,10 +6,17 @@ import {
   waitFor,
   within,
 } from '@testing-library/react';
-import { Routine, RoutineExercise, Exercise } from '@prisma/client';
+import { Routine, RoutineExercise, Exercise, DayOfWeek } from '@prisma/client';
 import * as useRoutinesHook from '@/hooks/useRoutines';
 
 jest.mock('@/hooks/useRoutines');
+jest.mock('@/hooks/useDeleteRoutine', () => ({
+  __esModule: true,
+  default: () => ({
+    deleteRoutine: jest.fn(),
+    isDeleting: false,
+  }),
+}));
 
 const mockRoutines: (Routine & {
   exercises: (RoutineExercise & { exercise: Exercise })[];
@@ -18,7 +25,7 @@ const mockRoutines: (Routine & {
     id: '1',
     name: 'Push Routine',
     description: '',
-    daysOfWeek: ['Monday'],
+    daysOfWeek: [DayOfWeek.Monday],
     userId: 'u1',
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -28,7 +35,7 @@ const mockRoutines: (Routine & {
     id: '2',
     name: 'Leg Day',
     description: '',
-    daysOfWeek: ['Friday'],
+    daysOfWeek: [DayOfWeek.Friday],
     userId: 'u1',
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -45,6 +52,7 @@ describe('<RoutinesPage />', () => {
     jest.spyOn(useRoutinesHook, 'default').mockReturnValue({
       routines: [],
       isPending: true,
+      setRoutines: jest.fn(), // Add missing setRoutines
     });
     render(<RoutinesPage userId="u1" />);
     expect(screen.getByText(/loading routines/i)).toBeInTheDocument();
@@ -54,6 +62,7 @@ describe('<RoutinesPage />', () => {
     jest.spyOn(useRoutinesHook, 'default').mockReturnValue({
       routines: [],
       isPending: false,
+      setRoutines: jest.fn(), // Add missing setRoutines
     });
     render(<RoutinesPage userId="u1" />);
     expect(screen.getByText(/you have no routines yet/i)).toBeInTheDocument();
@@ -63,6 +72,7 @@ describe('<RoutinesPage />', () => {
     jest.spyOn(useRoutinesHook, 'default').mockReturnValue({
       routines: mockRoutines,
       isPending: false,
+      setRoutines: jest.fn(), // Add missing setRoutines
     });
     render(<RoutinesPage userId="u1" />);
     fireEvent.change(screen.getByPlaceholderText(/search by name/i), {
@@ -78,6 +88,7 @@ describe('<RoutinesPage />', () => {
     jest.spyOn(useRoutinesHook, 'default').mockReturnValue({
       routines: mockRoutines,
       isPending: false,
+      setRoutines: jest.fn(), // Add missing setRoutines
     });
 
     render(<RoutinesPage userId="u1" />);
@@ -97,7 +108,7 @@ describe('<RoutinesPage />', () => {
       id: `${i}`,
       name: `Routine ${i}`,
       description: '',
-      daysOfWeek: ['Monday'],
+      daysOfWeek: [DayOfWeek.Monday],
       userId: 'u1',
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -107,6 +118,7 @@ describe('<RoutinesPage />', () => {
     jest.spyOn(useRoutinesHook, 'default').mockReturnValue({
       routines: manyRoutines,
       isPending: false,
+      setRoutines: jest.fn(), // Add missing setRoutines
     });
 
     render(<RoutinesPage userId="u1" />);
@@ -119,7 +131,7 @@ describe('<RoutinesPage />', () => {
       id: `${i}`,
       name: `Routine ${i}`,
       description: '',
-      daysOfWeek: ['Monday'],
+      daysOfWeek: [DayOfWeek.Monday],
       userId: 'u1',
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -129,15 +141,16 @@ describe('<RoutinesPage />', () => {
     jest.spyOn(useRoutinesHook, 'default').mockReturnValue({
       routines: manyRoutines,
       isPending: false,
+      setRoutines: jest.fn(), // Add missing setRoutines
     });
 
     render(<RoutinesPage userId="u1" />);
 
-    const next = screen.getByRole('link', { name: /next/i });
-    fireEvent.click(next);
+    const nextButton = screen.getByRole('button', { name: /next page/i });
+    fireEvent.click(nextButton);
 
-    const prev = screen.getByRole('link', { name: /previous/i });
-    fireEvent.click(prev);
+    const prevButton = screen.getByRole('button', { name: /previous page/i });
+    fireEvent.click(prevButton);
   });
 
   it('closes delete modal on cancel', () => {

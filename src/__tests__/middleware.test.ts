@@ -68,7 +68,6 @@ describe('middleware', () => {
   });
 
   it('redirects authenticated user away from auth routes', async () => {
-    // Mock user as authenticated
     const mockUser = { id: 'user123', email: 'user@example.com' };
     (createServerClient as jest.Mock).mockReturnValue({
       auth: {

@@ -1,5 +1,3 @@
-// __tests__/actions/deleteRoutine.test.ts
-
 import deleteRoutineAction from '@/actions/deleteRoutine';
 import { prisma } from '@/db/prisma';
 import handleError from '@/utils/handle';
