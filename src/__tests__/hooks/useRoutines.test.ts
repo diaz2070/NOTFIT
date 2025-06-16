@@ -1,11 +1,11 @@
 import { renderHook, act } from '@testing-library/react';
 import useRoutines from '@/hooks/useRoutines';
-import getRoutinesAction, { RoutineWithExercises } from '@/actions/routines';
+import { getRoutinesAction, RoutineWithExercises } from '@/actions/routines';
 import { toast } from 'sonner';
 
 jest.mock('@/actions/routines', () => ({
   __esModule: true,
-  default: jest.fn(),
+  getRoutinesAction: jest.fn(),
 }));
 
 jest.mock('sonner', () => ({
