@@ -60,7 +60,6 @@ export default function HistoryPage({ userId }: { userId: string }) {
       try {
         const res = await getWorkoutHistory();
         setWorkoutHistory(res);
-        console.log('Workout history loaded:', res);
       } catch (e) {
         if (e instanceof Error) {
           setError(e);
